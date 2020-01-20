@@ -21,23 +21,15 @@ namespace NeutronBlaster
 
             applicationName = typeof(App).Assembly.GetName().Name;
 
+            var windowViewModel = new MainWindowViewModel();
             var window = new MainWindow
             {
-                //DataContext = null
+                DataContext = windowViewModel
             };
 
             window.Show();
 
-            try
-            {
-                var destinationSetter = new DestinationSetter(@"C:\Users\Sam\Downloads");
-                var watcher = new LocationWatcher(@"C:\Users\Sam\Saved Games\Frontier Developments\Elite Dangerous");
-                destinationSetter.SetClipWhenLocationChanges(watcher);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            windowViewModel.Begin();
         }
 
         private void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)

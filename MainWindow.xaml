@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeutronBlaster"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}" 
         Title="MainWindow" Height="450" Width="800">
+
     <StackPanel>
-    <Label Content="{Binding Path=CurrentLocation}" />
+      <Label>
+        <TextBlock Background="Transparent"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}Current System: {0}">
+                    <Binding Path="CurrentLocation" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        </Label>
+      <Label>
+        <TextBlock Background="Transparent"
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}Target System: {0}">
+                    <Binding Path="TargetSystem" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        </Label>
     </StackPanel>
+
 </Window>
