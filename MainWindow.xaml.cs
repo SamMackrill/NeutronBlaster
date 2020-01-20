@@ -24,5 +24,7 @@ namespace NeutronBlaster
         {
             InitializeComponent();
         }
+
+        public string CurrentLocation => "Hello Mum";
     }
 }
