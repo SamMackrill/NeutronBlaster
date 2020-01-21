@@ -4,7 +4,11 @@
              xmlns:local="clr-namespace:NeutronBlaster"
              Startup = "Application_Start"
              Exit="Application_Exit">
-    <Application.Resources>
-         
-    </Application.Resources>
+    <!-- <Application.Resources>
+     <ResourceDictionary>      
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="Resources/flat_neutron_star_32.ico" />
+        </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>        
+    </Application.Resources> -->
 </Application>

@@ -29,10 +29,8 @@ namespace NeutronBlaster
                 .Select(l => l.Split(',').First().Trim('"')).ToList();
 
             player = new SoundPlayer();
-            player.SoundLocation = "Hitting_Metal.wav";
+            player.SoundLocation = "Resources\\Hitting_Metal.wav";
             player.Load();
-
-
         }
 
         public void SetClipWhenLocationChanges(LocationWatcher watcher)
