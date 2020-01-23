@@ -5,13 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeutronBlaster"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel}" 
         Icon="Resources/neutron_star_32.ico"
         Background="#242424"
         Foreground="#FB651D"
         Title="NeutronBlaster"
         Height="100" Width="300">
-
 
     <StackPanel>
       <Label>
