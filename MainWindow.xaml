@@ -10,34 +10,49 @@
         Background="#242424"
         Foreground="#FB651D"
         Title="NeutronBlaster"
-        Height="100" Width="300">
+        Height="120" Width="355">
 
     <StackPanel>
-      <Label>
-        <TextBlock Background="Transparent"
+        <Label>
+            <TextBlock Background="Transparent"
             HorizontalAlignment="Center" 
             VerticalAlignment="Center"
             Foreground="#FB651D"
             >
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}Current System: {0}">
-                    <Binding Path="CurrentLocation" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Current System: {0}">
+                        <Binding Path="CurrentSystem" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
         </Label>
-      <Label>
-        <TextBlock Background="Transparent"
+
+        <Label>
+            <TextBlock Background="Transparent"
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       Foreground="#FB651D"
+            >
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Last Route Location: {0}">
+                        <Binding Path="LastSystemOnRoute" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </Label>
+
+        <Label>
+            <TextBlock Background="Transparent"
             HorizontalAlignment="Center" 
             VerticalAlignment="Center"
             Foreground="#FB651D"
             >
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}Target System: {0}">
-                    <Binding Path="TargetSystem" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Target System: {0}">
+                        <Binding Path="TargetSystem" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
         </Label>
     </StackPanel>
 

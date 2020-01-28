@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace NeutronBlaster
 {
-    public class DestinationSetter
+    public class Router
     {
         private readonly List<string> route;
-        public DestinationSetter(string routeFolderPath)
+        public Router(string routeFolderPath)
         {
 
             var routeFolder = new DirectoryInfo(routeFolderPath);
@@ -25,12 +25,18 @@ namespace NeutronBlaster
 
             route = File.ReadAllLines(routeFile.FullName).ToList().Skip(1)
                 .Select(l => l.Split(',').First().Trim('"')).ToList();
-
         }
+
+        public string FirstSystem => route.FirstOrDefault();
 
         public string NextDestination(string fromLocation)
         {
             return route.SkipWhile(s => s != fromLocation).ElementAtOrDefault(1);
+        }
+
+        public bool HasSystem(string system)
+        {
+            return route.Any(r => r == system);
         }
     }
 }

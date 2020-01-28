@@ -8,17 +8,37 @@ namespace NeutronBlaster
 {
     public class LocationWatcher
     {
-        public EventHandler<string> Changed;
+        private readonly Router router;
+        public EventHandler<string> CurrentSystemChanged;
+        public EventHandler<string> LastSystemOnRouteChanged;
 
         private string currentSystem;
-
         public string CurrentSystem
         {
             get => currentSystem;
             private set
             {
                 currentSystem = value;
-                Changed?.Invoke(this, CurrentSystem);
+                CurrentSystemChanged?.Invoke(this, CurrentSystem);
+                if (router.HasSystem(currentSystem)) LastSystemOnRoute = currentSystem;
+                if (LastSystemOnRoute == null)
+                {
+                    LastSystemOnRoute = JumpHistory
+                                            .OrderByDescending(s => s.Date)
+                                            .FirstOrDefault(s => router.HasSystem(s.StarSystem))?.StarSystem ??
+                                        router.FirstSystem;
+                }
+            }
+        }
+
+        private string lastSystemOnRoute;
+        public string LastSystemOnRoute
+        {
+            get => lastSystemOnRoute;
+            private set
+            {
+                lastSystemOnRoute = value;
+                LastSystemOnRouteChanged?.Invoke(this, LastSystemOnRoute);
             }
         }
 
@@ -38,8 +58,9 @@ namespace NeutronBlaster
         private FileSystemSafeWatcher watcher;
         private long position;
 
-        public LocationWatcher(string journalFolderPath)
+        public LocationWatcher(string journalFolderPath, Router router)
         {
+            this.router = router;
             journalFolder = new DirectoryInfo(journalFolderPath);
             if (!journalFolder.Exists)
             {
@@ -64,6 +85,7 @@ namespace NeutronBlaster
 
         public void StartWatching()
         {
+            JumpHistory = new List<LogEvent>();
             var logFile = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
             position = 0;
             SetLocationFromFile(logFile?.FullName);
@@ -80,13 +102,13 @@ namespace NeutronBlaster
             watcher.EnableRaisingEvents = true;
         }
 
+        private List<LogEvent> JumpHistory { get; set; }
         private void SetLocationFromFile(string filePath)
         {
             if (filePath == null) return;
 
             CurrentLogFile = filePath;
 
-            var journalEvents = new List<LogEvent>();
             using (var file = File.Open(CurrentLogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 if (position >= file.Length)
@@ -101,15 +123,17 @@ namespace NeutronBlaster
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        journalEvents.Add(JsonSerializer.Deserialize<LogEvent>(line));
+                        var logEvent = JsonSerializer.Deserialize<LogEvent>(line);
+                        if (logEvent.EventType == "FSDJump" || logEvent.EventType == "Location")
+                        {
+                            JumpHistory.Add(logEvent);
+                        }
                     }
                     position = file.Position; 
                 }
             }
 
-            journalEvents = journalEvents.OrderByDescending(j => j.Date).ToList();
-            var currentSystemEvent = journalEvents.FirstOrDefault(l => l.EventType == "FSDJump")
-                                  ?? journalEvents.FirstOrDefault(l => l.EventType == "Location");
+            var currentSystemEvent = JumpHistory.OrderByDescending(j => j.Date).FirstOrDefault();
             if (currentSystemEvent == null) return;
             
             CurrentSystem = currentSystemEvent.StarSystem;

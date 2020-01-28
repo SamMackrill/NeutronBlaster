@@ -8,7 +8,7 @@ namespace NeutronBlaster
     public class MainWindowViewModel : BaseViewModel
     {
 
-        private readonly DestinationSetter destinationSetter;
+        private readonly Router router;
         private readonly SoundPlayer player;
         private readonly string userProfilePath;
 
@@ -17,11 +17,11 @@ namespace NeutronBlaster
             player = new SoundPlayer {SoundLocation = @"Resources\Hitting_Metal.wav"};
             player.Load();
             userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
-            destinationSetter = new DestinationSetter($@"{userProfilePath}\Downloads");
+            router = new Router($@"{userProfilePath}\Downloads");
         }
 
         private string currentLocation;
-        public string CurrentLocation
+        public string CurrentSystem
         {
             get => currentLocation ?? "Unknown";
             set
@@ -29,10 +29,24 @@ namespace NeutronBlaster
                 if (Equals(value, currentLocation)) return;
                 currentLocation = value;
                 OnPropertyChanged();
-                var destination = destinationSetter.NextDestination(currentLocation);
+            }
+        }
+
+
+        private string lastLocationOnRoute;
+        public string LastSystemOnRoute
+        {
+            get => lastLocationOnRoute ?? "Unknown";
+            set
+            {
+                if (Equals(value, lastLocationOnRoute)) return;
+                lastLocationOnRoute = value;
+                OnPropertyChanged();
+                var destination = router.NextDestination(lastLocationOnRoute);
                 if (destination != null) TargetSystem = destination;
             }
         }
+
         private string targetSystem;
         public string TargetSystem
         {
@@ -62,8 +76,9 @@ namespace NeutronBlaster
         {
             try
             {
-                var watcher = new LocationWatcher($@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous");
-                watcher.Changed += OnLocationChanged;
+                var watcher = new LocationWatcher($@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous", router);
+                watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
+                watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
                 watcher.StartWatching();
             }
             catch (Exception ex)
@@ -71,7 +86,5 @@ namespace NeutronBlaster
                 Console.WriteLine(ex.Message);
             }
         }
-
-        private void OnLocationChanged(object sender, string l) => CurrentLocation = l;
     }
 }
