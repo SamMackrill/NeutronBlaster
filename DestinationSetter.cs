@@ -7,7 +7,7 @@ namespace NeutronBlaster
 {
     public class DestinationSetter
     {
-        private List<string> route;
+        private readonly List<string> route;
         public DestinationSetter(string routeFolderPath)
         {
 

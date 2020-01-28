@@ -2,17 +2,41 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text.Json;
 
 namespace NeutronBlaster
 {
     public class LocationWatcher
     {
-        public string CurrentSystem { get; }
-        private readonly Regex StarSystemMatch = new Regex("\"StarSystem\":\"([^\"]+)\"", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private FileInfo latestFile;
-        private DirectoryInfo journalFolder;
-        private FileSystemWatcher watcher;
+        public EventHandler<string> Changed;
+
+        private string currentSystem;
+
+        public string CurrentSystem
+        {
+            get => currentSystem;
+            private set
+            {
+                currentSystem = value;
+                Changed?.Invoke(this, CurrentSystem);
+            }
+        }
+
+        private string currentLogFile;
+        public string CurrentLogFile
+        {
+            get => currentLogFile;
+            private set
+            {
+                if (value == currentLogFile) return;
+                currentLogFile = value;
+                position = 0;
+            }
+        }
+
+        private readonly DirectoryInfo journalFolder;
+        private FileSystemSafeWatcher watcher;
+        private long position;
 
         public LocationWatcher(string journalFolderPath)
         {
@@ -23,42 +47,72 @@ namespace NeutronBlaster
             }
         }
 
-        public void Watch(Action<string> update)
+        public void StartWatching()
         {
-
             void OnFileChanged(object sender, FileSystemEventArgs e)
             {
-                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
-                SetLocationFromFile(e.FullPath, update);
+                try
+                {
+                    watcher.EnableRaisingEvents = false;
+                    Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+                    SetLocationFromFile(e.FullPath);
+                }
+
+                finally
+                {
+                    watcher.EnableRaisingEvents = true;
+                }
             }
 
-            latestFile = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
-            SetLocationFromFile(latestFile.FullName, update);
-            
-            watcher = new FileSystemWatcher();
+            var logFile = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
+            position = 0;
+            SetLocationFromFile(logFile?.FullName);
 
-            watcher.Path = journalFolder.FullName;
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "Journal.*.log";
+            watcher = new FileSystemSafeWatcher
+            {
+                Path = journalFolder.FullName, 
+                NotifyFilter = NotifyFilters.LastWrite, 
+                Filter = "Journal.*.log"
+            };
 
             watcher.Changed += OnFileChanged;
 
             watcher.EnableRaisingEvents = true;
         }
 
-        private void SetLocationFromFile(string filePath, Action<string> update)
+        private void SetLocationFromFile(string filePath)
         {
             if (filePath == null) return;
-            
-            var journalLines = File.ReadAllLines(filePath).ToList();
-            journalLines.Reverse();
-            var currentSystemEvent = journalLines.FirstOrDefault(l => l.Contains("\"event\":\"FSDJump\""))
-                                    ?? journalLines.FirstOrDefault(l => l.Contains("\"event\":\"Location\""));
-            var systemMatch = StarSystemMatch.Match(currentSystemEvent);
-            if (systemMatch.Success)
+
+            CurrentLogFile = filePath;
+
+            var journalEvents = new List<LogEvent>();
+            using (var file = File.Open(CurrentLogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                update(systemMatch.Groups[1].Value);
-            }  
+                if (position >= file.Length)
+                {
+                    position = file.Length;
+                    return;
+                }
+
+                file.Position = position;
+                using (var reader = new StreamReader(file))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        journalEvents.Add(JsonSerializer.Deserialize<LogEvent>(line));
+                    }
+                    position = file.Position; 
+                }
+            }
+
+            journalEvents = journalEvents.OrderByDescending(j => j.Date).ToList();
+            var currentSystemEvent = journalEvents.FirstOrDefault(l => l.EventType == "FSDJump")
+                                  ?? journalEvents.FirstOrDefault(l => l.EventType == "Location");
+            if (currentSystemEvent == null) return;
+            
+            CurrentSystem = currentSystemEvent.StarSystem;
         }
 
     }

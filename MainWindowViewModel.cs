@@ -6,16 +6,16 @@ namespace NeutronBlaster
     public class MainWindowViewModel : BaseViewModel
     {
 
-        private DestinationSetter destinationSetter;
-        private SoundPlayer player;
+        private readonly DestinationSetter destinationSetter;
+        private readonly SoundPlayer player;
+        private readonly string userProfilePath;
 
         public MainWindowViewModel()
         {
-            player = new SoundPlayer();
-            player.SoundLocation = "Resources\\Hitting_Metal.wav";
+            player = new SoundPlayer {SoundLocation = @"Resources\Hitting_Metal.wav"};
             player.Load();
-
-            destinationSetter =  new DestinationSetter(@"C:\Users\Sam\Downloads");
+            userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
+            destinationSetter = new DestinationSetter($@"{userProfilePath}\Downloads");
         }
 
         private string currentLocation;
@@ -49,8 +49,9 @@ namespace NeutronBlaster
         {
             try
             {
-                var watcher = new LocationWatcher(@"C:\Users\Sam\Saved Games\Frontier Developments\Elite Dangerous");
-                watcher.Watch((Action<string>)(l => CurrentLocation = l));
+                var watcher = new LocationWatcher($@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous");
+                watcher.Changed += OnLocationChanged;
+                watcher.StartWatching();
             }
             catch (Exception ex)
             {
@@ -58,5 +59,7 @@ namespace NeutronBlaster
             }
         }
 
+        [STAThread]
+        private void OnLocationChanged(object sender, string l) => CurrentLocation = l;
     }
 }

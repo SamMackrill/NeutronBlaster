@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace NeutronBlaster
@@ -15,6 +10,7 @@ namespace NeutronBlaster
     {
         private static string applicationName;
 
+        [STAThread]
         private void Application_Start(object sender, StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
