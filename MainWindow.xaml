@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NeutronBlaster"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}" 
-        Icon="Resources/neutron_star_32.ico"
+        Icon="Resources/flat_neutron_star_32.ico"
         Background="#242424"
         Foreground="#FB651D"
         Title="NeutronBlaster"
