@@ -76,7 +76,8 @@ namespace NeutronBlaster
         {
             try
             {
-                var watcher = new LocationWatcher($@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous", router);
+                var logLocation = $@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous";
+                var watcher = new LocationWatcher(logLocation, router);
                 watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
                 watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
                 watcher.StartWatching();

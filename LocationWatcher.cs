@@ -86,7 +86,7 @@ namespace NeutronBlaster
         public void StartWatching()
         {
             JumpHistory = new List<LogEvent>();
-            var logFile = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
+            var logFile = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.Name).FirstOrDefault();
             position = 0;
             SetLocationFromFile(logFile?.FullName);
 
@@ -123,7 +123,16 @@ namespace NeutronBlaster
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        var logEvent = JsonSerializer.Deserialize<LogEvent>(line);
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+                        LogEvent logEvent;
+                        try
+                        {
+                           logEvent = JsonSerializer.Deserialize<LogEvent>(line, new JsonSerializerOptions{IgnoreNullValues=true});
+                        }
+                        catch (System.Exception ex)
+                        {
+                            continue;
+                        }
                         if (logEvent.EventType == "FSDJump" || logEvent.EventType == "Location")
                         {
                             JumpHistory.Add(logEvent);
