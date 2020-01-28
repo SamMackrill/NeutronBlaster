@@ -1,5 +1,7 @@
 using System;
 using System.Media;
+using System.Threading;
+using System.Windows;
 
 namespace NeutronBlaster
 {
@@ -40,9 +42,20 @@ namespace NeutronBlaster
                 if (Equals(value, targetSystem)) return;
                 targetSystem = value;
                 OnPropertyChanged();
-                System.Windows.Clipboard.SetText(targetSystem);
-                player.Play();
+                UpdateTarget();
             }
+        }
+
+        private Thread UpdateTarget()
+        {
+            var thread = new Thread(() =>
+            {
+                Clipboard.SetText(targetSystem);
+                player.Play();
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return thread;
         }
 
         public void Begin()
@@ -59,7 +72,6 @@ namespace NeutronBlaster
             }
         }
 
-        [STAThread]
         private void OnLocationChanged(object sender, string l) => CurrentLocation = l;
     }
 }

@@ -213,8 +213,7 @@ namespace NeutronBlaster
         /// <param name="e">A System.IO.FileSystemEventArgs that contains the event data.</param>
         protected void OnChanged(FileSystemEventArgs e)
         {
-            if (Changed != null)
-                Changed(this, e);
+            Changed?.Invoke(this, e);
         }
 
         /// <summary>
@@ -223,8 +222,7 @@ namespace NeutronBlaster
         /// <param name="e">A System.IO.FileSystemEventArgs that contains the event data.</param>
         protected void OnCreated(FileSystemEventArgs e)
         {
-            if (Created != null)
-                Created(this, e);
+            Created?.Invoke(this, e);
         }
 
         /// <summary>
@@ -233,8 +231,7 @@ namespace NeutronBlaster
         /// <param name="e">A System.IO.FileSystemEventArgs that contains the event data.</param>
         protected void OnDeleted(FileSystemEventArgs e)
         {
-            if (Deleted != null)
-                Deleted(this, e);
+            Deleted?.Invoke(this, e);
         }
 
         /// <summary>
@@ -243,8 +240,7 @@ namespace NeutronBlaster
         /// <param name="e">An System.IO.ErrorEventArgs that contains the event data.</param>
         protected void OnError(ErrorEventArgs e)
         {
-            if (Error != null)
-                Error(this, e);
+            Error?.Invoke(this, e);
         }
 
         /// <summary>
@@ -253,8 +249,7 @@ namespace NeutronBlaster
         /// <param name="e">A System.IO.RenamedEventArgs that contains the event data.</param>
         protected void OnRenamed(RenamedEventArgs e)
         {
-            if (Renamed != null)
-                Renamed(this, e);
+            Renamed?.Invoke(this, e);
         }
 
         /// <summary>

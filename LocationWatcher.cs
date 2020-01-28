@@ -47,23 +47,23 @@ namespace NeutronBlaster
             }
         }
 
-        public void StartWatching()
+        void OnFileChanged(object sender, FileSystemEventArgs e)
         {
-            void OnFileChanged(object sender, FileSystemEventArgs e)
+            try
             {
-                try
-                {
-                    watcher.EnableRaisingEvents = false;
-                    Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
-                    SetLocationFromFile(e.FullPath);
-                }
-
-                finally
-                {
-                    watcher.EnableRaisingEvents = true;
-                }
+                watcher.EnableRaisingEvents = false;
+                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+                SetLocationFromFile(e.FullPath);
             }
 
+            finally
+            {
+                watcher.EnableRaisingEvents = true;
+            }
+        }
+
+        public void StartWatching()
+        {
             var logFile = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
             position = 0;
             SetLocationFromFile(logFile?.FullName);
