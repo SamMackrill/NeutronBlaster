@@ -55,7 +55,7 @@ namespace NeutronBlaster
         }
 
         private readonly DirectoryInfo journalFolder;
-        private FileSystemSafeWatcher watcher;
+        private FileSystemWatcher watcher;
         private long position;
 
         public LocationWatcher(string journalFolderPath, Router router)
@@ -73,7 +73,7 @@ namespace NeutronBlaster
             try
             {
                 watcher.EnableRaisingEvents = false;
-                Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+                Console.WriteLine($"File: {e.FullPath} {e.ChangeType} {e.Name}");
                 SetLocationFromFile(e.FullPath);
             }
 
@@ -86,14 +86,20 @@ namespace NeutronBlaster
         public void StartWatching()
         {
             JumpHistory = new List<LogEvent>();
-            var logFile = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.Name).FirstOrDefault();
-            position = 0;
-            SetLocationFromFile(logFile?.FullName);
+            lastJumpCount = 0;
+            var journalFiles = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.Name);
+            foreach(var logFile in journalFiles)
+            {
+                position = 0;
+                if (SetLocationFromFile(logFile.FullName)) break;
+            }
 
-            watcher = new FileSystemSafeWatcher
+            // TODO go back far enough to find last system on route
+
+            watcher = new FileSystemWatcher
             {
                 Path = journalFolder.FullName,
-                NotifyFilter = NotifyFilters.LastWrite,
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
                 Filter = "Journal.*.log"
             };
 
@@ -103,11 +109,12 @@ namespace NeutronBlaster
         }
 
         private List<LogEvent> JumpHistory { get; set; }
-        private void SetLocationFromFile(string filePath)
+        private int lastJumpCount;
+        private bool SetLocationFromFile(string filePath)
         {
             Console.WriteLine($"SetLocationFromFile: {filePath ?? "null"}");
 
-            if (filePath == null) return;
+            if (filePath == null) return false;
 
             CurrentLogFile = filePath;
 
@@ -115,18 +122,20 @@ namespace NeutronBlaster
             {
                 using (var file = File.Open(CurrentLogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
+                    Console.WriteLine($"File position: {position} of {file.Length}");
                     if (position >= file.Length)
                     {
                         position = file.Length;
-                        return;
+                        return false;
                     }
-
+                    // TODO check logile is for correct commander
                     file.Position = position;
                     using (var reader = new StreamReader(file))
                     {
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
+                            Console.WriteLine($"line: {line}");
                             if (string.IsNullOrWhiteSpace(line)) continue;
                             LogEvent logEvent;
                             try
@@ -135,12 +144,13 @@ namespace NeutronBlaster
                             }
                             catch (System.Exception ex)
                             {
-                                Console.WriteLine($"JsonSerializer: {ex.Message}");
+                                Console.WriteLine($"JsonSerializer error: {ex.Message}");
                                 continue;
                             }
                             if (logEvent.EventType == "FSDJump" || logEvent.EventType == "Location")
                             {
                                 JumpHistory.Add(logEvent);
+                                Console.WriteLine($"Jump added: {logEvent}");
                             }
                         }
                         position = file.Position;
@@ -151,16 +161,28 @@ namespace NeutronBlaster
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine($"Reading log file: {ex.Message}");
-                return;
+                Console.WriteLine($"Error reading log file: {ex.Message}");
+                return false;
             }
 
             Console.WriteLine($"Jumps Found: {JumpHistory.Count}");
 
-            var currentSystemEvent = JumpHistory.OrderByDescending(j => j.Date).FirstOrDefault();
-            if (currentSystemEvent == null) return;
+            if (JumpHistory.Count == lastJumpCount)
+            {
+                Console.WriteLine($"No new jumps, skipping");
+                return false;
+            }
 
+            var currentSystemEvent = JumpHistory.OrderByDescending(j => j.Date).FirstOrDefault();
+            if (currentSystemEvent == null)
+            {
+                Console.WriteLine($"No jumps, skipping");
+                return false;
+            } 
+
+            lastJumpCount = JumpHistory.Count;
             CurrentSystem = currentSystemEvent.StarSystem;
+            return true;
         }
 
     }
