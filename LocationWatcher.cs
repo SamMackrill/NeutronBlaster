@@ -92,8 +92,8 @@ namespace NeutronBlaster
 
             watcher = new FileSystemSafeWatcher
             {
-                Path = journalFolder.FullName, 
-                NotifyFilter = NotifyFilters.LastWrite, 
+                Path = journalFolder.FullName,
+                NotifyFilter = NotifyFilters.LastWrite,
                 Filter = "Journal.*.log"
             };
 
@@ -105,46 +105,61 @@ namespace NeutronBlaster
         private List<LogEvent> JumpHistory { get; set; }
         private void SetLocationFromFile(string filePath)
         {
+            Console.WriteLine($"SetLocationFromFile: {filePath ?? "null"}");
+
             if (filePath == null) return;
 
             CurrentLogFile = filePath;
 
-            using (var file = File.Open(CurrentLogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            try
             {
-                if (position >= file.Length)
+                using (var file = File.Open(CurrentLogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    position = file.Length;
-                    return;
-                }
-
-                file.Position = position;
-                using (var reader = new StreamReader(file))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
+                    if (position >= file.Length)
                     {
-                        if (string.IsNullOrWhiteSpace(line)) continue;
-                        LogEvent logEvent;
-                        try
-                        {
-                           logEvent = JsonSerializer.Deserialize<LogEvent>(line, new JsonSerializerOptions{IgnoreNullValues=true});
-                        }
-                        catch (System.Exception ex)
-                        {
-                            continue;
-                        }
-                        if (logEvent.EventType == "FSDJump" || logEvent.EventType == "Location")
-                        {
-                            JumpHistory.Add(logEvent);
-                        }
+                        position = file.Length;
+                        return;
                     }
-                    position = file.Position; 
+
+                    file.Position = position;
+                    using (var reader = new StreamReader(file))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (string.IsNullOrWhiteSpace(line)) continue;
+                            LogEvent logEvent;
+                            try
+                            {
+                                logEvent = JsonSerializer.Deserialize<LogEvent>(line, new JsonSerializerOptions { IgnoreNullValues = true });
+                            }
+                            catch (System.Exception ex)
+                            {
+                                Console.WriteLine($"JsonSerializer: {ex.Message}");
+                                continue;
+                            }
+                            if (logEvent.EventType == "FSDJump" || logEvent.EventType == "Location")
+                            {
+                                JumpHistory.Add(logEvent);
+                            }
+                        }
+                        position = file.Position;
+                    }
+
+
                 }
             }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"Reading log file: {ex.Message}");
+                return;
+            }
+
+            Console.WriteLine($"Jumps Found: {JumpHistory.Count}");
 
             var currentSystemEvent = JumpHistory.OrderByDescending(j => j.Date).FirstOrDefault();
             if (currentSystemEvent == null) return;
-            
+
             CurrentSystem = currentSystemEvent.StarSystem;
         }
 

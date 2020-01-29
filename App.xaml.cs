@@ -10,7 +10,6 @@ namespace NeutronBlaster
     {
         private static string applicationName;
 
-        [STAThread]
         private void Application_Start(object sender, StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;

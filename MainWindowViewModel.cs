@@ -28,6 +28,7 @@ namespace NeutronBlaster
             {
                 if (Equals(value, currentLocation)) return;
                 currentLocation = value;
+                Console.WriteLine($"CurrentSystem: {value}");
                 OnPropertyChanged();
             }
         }
@@ -41,6 +42,7 @@ namespace NeutronBlaster
             {
                 if (Equals(value, lastLocationOnRoute)) return;
                 lastLocationOnRoute = value;
+                Console.WriteLine($"LastSystemOnRoute: {value}");
                 OnPropertyChanged();
                 var destination = router.NextDestination(lastLocationOnRoute);
                 if (destination != null) TargetSystem = destination;
@@ -55,6 +57,7 @@ namespace NeutronBlaster
             {
                 if (Equals(value, targetSystem)) return;
                 targetSystem = value;
+                Console.WriteLine($"TargetSystem: {value}");
                 OnPropertyChanged();
                 UpdateTarget();
             }
@@ -84,7 +87,7 @@ namespace NeutronBlaster
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Begin() {ex.Message}");
             }
         }
     }

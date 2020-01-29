@@ -9,7 +9,7 @@
         Icon="Resources/flat_neutron_star_32.ico"
         Background="#242424"
         Foreground="#FB651D"
-        Title="NeutronBlaster"
+        Title="Neutron Blaster"
         Height="120" Width="355">
 
     <StackPanel>
