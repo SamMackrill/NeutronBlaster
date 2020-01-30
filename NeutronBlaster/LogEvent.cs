@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace NeutronBlaster
@@ -16,9 +14,10 @@ namespace NeutronBlaster
         public string EventType { get; set; }
 
         public string StarSystem { get; set; }
+        public string Name { get; set; }
 
 
-        public string DebugDisplay => ToString();
+        private string DebugDisplay => ToString();
 
         /// <inheritdoc />
         public override string ToString()

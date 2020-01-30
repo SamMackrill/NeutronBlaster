@@ -1,16 +1,27 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Windows;
 
 namespace NeutronBlaster
 {
-    public class LocationWatcher
+    public class JournalScanner
     {
-        private readonly Router router;
         public EventHandler<string> CurrentSystemChanged;
-        public EventHandler<string> LastSystemOnRouteChanged;
+        public EventHandler<string> CommanderChanged;
+
+        private string commander;
+        public string Commander
+        {
+            get => commander;
+            private set
+            {
+                commander = value;
+                CommanderChanged?.Invoke(this, commander);
+            }
+        }
 
         private string currentSystem;
         public string CurrentSystem
@@ -19,30 +30,28 @@ namespace NeutronBlaster
             private set
             {
                 currentSystem = value;
-                CurrentSystemChanged?.Invoke(this, CurrentSystem);
-                if (router.HasSystem(currentSystem)) LastSystemOnRoute = currentSystem;
-                if (LastSystemOnRoute == null)
-                {
-                    LastSystemOnRoute = JumpHistory
-                                            .OrderByDescending(s => s.Date)
-                                            .FirstOrDefault(s => router.HasSystem(s.StarSystem))?.StarSystem ??
-                                        router.FirstSystem;
-                }
+                CurrentSystemChanged?.Invoke(this, currentSystem);
             }
         }
 
-        private string lastSystemOnRoute;
-        public string LastSystemOnRoute
-        {
-            get => lastSystemOnRoute;
-            private set
-            {
-                lastSystemOnRoute = value;
-                LastSystemOnRouteChanged?.Invoke(this, LastSystemOnRoute);
-            }
-        }
+        public DirectoryInfo JournalFolder { get; set; }
+
+        private long position;
+        public List<LogEvent> JumpHistory { get; private set; }
+        private int lastJumpCount;
+
 
         private string currentLogFile;
+
+        public JournalScanner(string journalFolderPath)
+        {
+            JournalFolder = new DirectoryInfo(journalFolderPath);
+            if (!JournalFolder.Exists)
+            {
+                throw new Exception($"Journal folder not found! {JournalFolder}");
+            }
+        }
+
         public string CurrentLogFile
         {
             get => currentLogFile;
@@ -54,63 +63,21 @@ namespace NeutronBlaster
             }
         }
 
-        private readonly DirectoryInfo journalFolder;
-        private FileSystemWatcher watcher;
-        private long position;
-
-        public LocationWatcher(string journalFolderPath, Router router)
-        {
-            this.router = router;
-            journalFolder = new DirectoryInfo(journalFolderPath);
-            if (!journalFolder.Exists)
-            {
-                throw new Exception($"Journal folder not found! {journalFolder}");
-            }
-        }
-
-        void OnFileChanged(object sender, FileSystemEventArgs e)
-        {
-            try
-            {
-                watcher.EnableRaisingEvents = false;
-                Console.WriteLine($"File: {e.FullPath} {e.ChangeType} {e.Name}");
-                SetLocationFromFile(e.FullPath);
-            }
-
-            finally
-            {
-                watcher.EnableRaisingEvents = true;
-            }
-        }
-
-        public void StartWatching()
+        public void ScanJournals()
         {
             JumpHistory = new List<LogEvent>();
             lastJumpCount = 0;
-            var journalFiles = journalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.Name);
-            foreach(var logFile in journalFiles)
+            var journalFiles = JournalFolder.GetFiles("Journal.*.log").OrderByDescending(f => f.Name);
+            foreach (var logFile in journalFiles)
             {
                 position = 0;
                 if (SetLocationFromFile(logFile.FullName)) break;
             }
 
             // TODO go back far enough to find last system on route
-
-            watcher = new FileSystemWatcher
-            {
-                Path = journalFolder.FullName,
-                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
-                Filter = "Journal.*.log"
-            };
-
-            watcher.Changed += OnFileChanged;
-
-            watcher.EnableRaisingEvents = true;
         }
 
-        private List<LogEvent> JumpHistory { get; set; }
-        private int lastJumpCount;
-        private bool SetLocationFromFile(string filePath)
+        public bool SetLocationFromFile(string filePath)
         {
             Console.WriteLine($"SetLocationFromFile: {filePath ?? "null"}");
 
@@ -147,10 +114,23 @@ namespace NeutronBlaster
                                 Console.WriteLine($"JsonSerializer error: {ex.Message}");
                                 continue;
                             }
-                            if (logEvent.EventType == "FSDJump" || logEvent.EventType == "Location")
+                            switch (logEvent.EventType)
                             {
-                                JumpHistory.Add(logEvent);
-                                Console.WriteLine($"Jump added: {logEvent}");
+                                case "Commander":
+                                {
+                                    Console.WriteLine($"Commander found: {logEvent.Name}");
+                                    if (Commander == null)
+                                    {
+                                        Commander = logEvent.Name;
+                                    }
+                                    else if (logEvent.Name != Commander) return false;
+                                    break;
+                                }
+                                case "FSDJump":
+                                case "Location":
+                                    JumpHistory.Add(logEvent);
+                                    Console.WriteLine($"Jump added: {logEvent}");
+                                    break;
                             }
                         }
                         position = file.Position;
@@ -178,12 +158,11 @@ namespace NeutronBlaster
             {
                 Console.WriteLine($"No jumps, skipping");
                 return false;
-            } 
+            }
 
             lastJumpCount = JumpHistory.Count;
             CurrentSystem = currentSystemEvent.StarSystem;
             return true;
         }
-
     }
 }

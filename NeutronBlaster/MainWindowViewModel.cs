@@ -20,6 +20,10 @@ namespace NeutronBlaster
             router = new Router($@"{userProfilePath}\Downloads");
         }
 
+
+        private string commander;
+        public string Title => $"Neutron Blaster{(commander == null ? "" : $": {commander}")}";
+
         private string currentLocation;
         public string CurrentSystem
         {
@@ -80,9 +84,14 @@ namespace NeutronBlaster
             try
             {
                 var logLocation = $@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous";
-                var watcher = new LocationWatcher(logLocation, router);
+                var watcher = new JournalWatcher(logLocation, router);
                 watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
                 watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
+                watcher.CommanderChanged += (sender, c) =>
+                {
+                    commander = c;
+                    OnPropertyChanged(nameof(Title));
+                };
                 watcher.StartWatching();
             }
             catch (Exception ex)

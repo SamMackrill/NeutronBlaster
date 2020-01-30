@@ -1,0 +1,4 @@
+{ "timestamp":"2019-05-13T21:13:33Z", "event":"Fileheader", "part":1, "language":"English\\UK", "gameversion":"April Update Patch 1 EDH", "build":"r199545/r0 " }
+{ "timestamp":"2019-05-13T21:13:33Z", "event":"Music", "MusicTrack":"NoTrack" }
+{ "timestamp":"2019-05-13T21:13:33Z", "event":"Music", "MusicTrack":"MainMenu" }
+{ "timestamp":"2019-05-13T21:34:29Z", "event":"Shutdown" }

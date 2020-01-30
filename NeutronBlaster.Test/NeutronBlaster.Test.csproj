@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestCases\MultipleCommanders\Journal.190513084222.01.log" />
+    <None Remove="TestCases\MultipleCommanders\Journal.190513184929.01.log" />
+    <None Remove="TestCases\MultipleCommanders\Journal.190513221333.01.log" />
+    <None Remove="TestCases\MultipleCommanders\Journal.190513223431.01.log" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestCases\MultipleCommanders\Journal.190513084222.01.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestCases\MultipleCommanders\Journal.190513184929.01.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestCases\MultipleCommanders\Journal.190513221333.01.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestCases\MultipleCommanders\Journal.190513223431.01.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NeutronBlaster\NeutronBlaster.csproj" />
+  </ItemGroup>
+
+</Project>

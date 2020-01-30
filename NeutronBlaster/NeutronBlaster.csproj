@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="NeutronBlaster.Test\**" />
+    <EmbeddedResource Remove="NeutronBlaster.Test\**" />
+    <None Remove="NeutronBlaster.Test\**" />
+    <Page Remove="NeutronBlaster.Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\flat_neutron_star_32.ico" />
     <Resource Include="Resources\neutron_star_32.ico" />
     <Content Include="Resources\Hitting_Metal.wav">

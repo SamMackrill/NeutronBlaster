@@ -1,0 +1,68 @@
+﻿<Window x:Class="NeutronBlaster.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeutronBlaster"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel}" 
+        Icon="Resources/flat_neutron_star_32.ico"
+        Background="#242424"
+        Foreground="#FB651D"
+        Title="{Binding Path=Title}"
+        d:DesignHeight="100" d:DesignWidth="400"
+        MinWidth="355"
+        SizeToContent="WidthAndHeight">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" 
+               Content="Current System:" 
+               Background="Transparent"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Center"
+               Foreground="#FB651D" MouseDoubleClick="Control_OnMouseDoubleClick"/>
+        <Label Grid.Row="0" Grid.Column="1"
+               Content="{Binding Path=CurrentSystem}" 
+               Background="Transparent"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Center"
+               Foreground="#FB651D" />        
+
+        <Label Grid.Row="1" Grid.Column="0" 
+               Content="Last Route Location:" 
+               Background="Transparent"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Center"
+               Foreground="#FB651D"/>
+        <Label Grid.Row="1" Grid.Column="1"
+               Content="{Binding Path=LastSystemOnRoute}" 
+               Background="Transparent"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Center"
+               Foreground="#FB651D" />
+
+        <Label Grid.Row="2" Grid.Column="0" 
+               Content="Target System:" 
+               Background="Transparent"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Center"
+               Foreground="#FB651D"/>
+        <Label Grid.Row="2" Grid.Column="1"
+               Content="{Binding Path=TargetSystem}" 
+               Background="Transparent"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Center"
+               Foreground="#FB651D" />
+    </Grid>
+
+</Window>
