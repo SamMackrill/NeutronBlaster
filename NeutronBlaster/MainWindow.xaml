@@ -89,8 +89,10 @@
                        LastChildFill="true" 
                        Margin="0,0,10,0">
 
+
                 <Button DockPanel.Dock="Right"  
                         Padding="0" 
+                        Opacity="0.6"
                         VerticalAlignment="Center" 
                         BorderThickness="0" 
                         Height="24" Width="24"
@@ -99,6 +101,21 @@
                         Click="CloseButtonRectangle_Click" >
 
                     <Image Source="Resources/close.png"  Width="24" />
+                </Button>
+
+                <Button DockPanel.Dock="Right"  
+                        Padding="0"
+                        Margin="0,0,10,0"
+                        Opacity="0.6"
+                        VerticalAlignment="Center" 
+                        BorderThickness="0" 
+                        Height="24" Width="24"
+                        Background="Transparent"
+                        Style="{StaticResource FadeOutButton}"
+                        ToolTip="Settings"
+                        Command="{Binding Path=ShowSettingsCommand, Mode=OneWay}">
+
+                    <Image Source="Resources/settings3.png"  Width="24" />
                 </Button>
 
                 <Label Padding="0" FontWeight="DemiBold" Content="{Binding Path=Title}" />

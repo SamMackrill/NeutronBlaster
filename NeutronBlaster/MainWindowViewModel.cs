@@ -99,5 +99,20 @@ namespace NeutronBlaster
                 Console.WriteLine($"Begin() {ex.Message}");
             }
         }
+
+        public RelayCommand ShowSettingsCommand => new RelayCommand(() =>
+        {
+                // var settingsContext = new SettingsViewModel(Preferences);
+                // var settings = new SettingsWindow
+                // {
+                //     DataContext = settingsContext
+                // };
+                // settingsContext.Window = settings;
+
+                // var result = settings.ShowDialog();
+                // if (result != true) return;
+
+        });
+
     }
 }

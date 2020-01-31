@@ -24,6 +24,15 @@
     <Resource Include="Resources\close.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\settings.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\settings2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>    
+    <Resource Include="Resources\settings3.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Resources\Hitting_Metal.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
