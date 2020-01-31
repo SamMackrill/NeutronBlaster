@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 
+using NeutronBlaster.Models;
+
 namespace NeutronBlaster
 {
     /// <summary>
@@ -15,6 +17,17 @@ namespace NeutronBlaster
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
             applicationName = typeof(App).Assembly.GetName().Name;
+
+            var userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
+            if (string.IsNullOrWhiteSpace(Settings.Default.JournalFileLocation))
+            {
+                Settings.Default.JournalFileLocation = $@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous";
+            }
+
+            if (string.IsNullOrWhiteSpace(Settings.Default.RouteLocation))
+            {
+                Settings.Default.RouteLocation = $@"{userProfilePath}\Downloads";
+            }
 
             var windowViewModel = new MainWindowViewModel();
             var window = new MainWindow
@@ -34,7 +47,7 @@ namespace NeutronBlaster
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            //Settings.Default.Save();
+            Settings.Default.Save();
         }
     }
 }

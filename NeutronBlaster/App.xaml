@@ -4,11 +4,51 @@
              xmlns:local="clr-namespace:NeutronBlaster"
              Startup = "Application_Start"
              Exit="Application_Exit">
-    <!-- <Application.Resources>
-     <ResourceDictionary>      
-        <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="Resources/flat_neutron_star_32.ico" />
-        </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>        
-    </Application.Resources> -->
+
+    <Application.Resources>
+        <Style x:Key="DefaultStyle" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Control.Foreground" Value="#FB651D"/>
+            <Setter Property="Control.Background" Value="#242424"/>
+        </Style>
+
+        <Style TargetType="Label" BasedOn="{StaticResource DefaultStyle}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultStyle}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="FadeOutButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Control.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard >
+                            <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="Opacity"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Control.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard >
+                            <DoubleAnimation Duration="0:0:0.2" To="0.4" Storyboard.TargetProperty="Opacity"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </Application.Resources>
+
 </Application>

@@ -6,24 +6,19 @@ using System.Windows.Input;
 namespace NeutronBlaster
 {
     /// <summary>
-    /// A command whose sole purpose is to relay its functionality to other objects by invoking delegates. The default return value for the CanExecute method is 'true'.
+    /// A command to relay its functionality to other objects by invoking delegates. The default return value for the CanExecute method is 'true'.
     /// </summary>
     public class RelayCommand<T> : ICommand
     {
-        public RelayCommand(Action<T> execute)
-            : this(execute, null)
-        {
-        }
-
         /// <summary>
         /// Creates a new command.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<T> execute, Predicate<T> canExecute)
+        public RelayCommand(Action<T> execute, Predicate<T> canExecute = null)
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            this.canExecute = canExecute;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
@@ -35,21 +30,21 @@ namespace NeutronBlaster
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null || _canExecute((T) parameter);
+            return canExecute == null || canExecute((T) parameter);
         }
 
         public event EventHandler CanExecuteChanged
         {
             add
             {
-                if (_canExecute != null)
+                if (canExecute != null)
                 {
                     CommandManager.RequerySuggested += value;
                 }
             }
             remove
             {
-                if (_canExecute != null)
+                if (canExecute != null)
                 {
                     CommandManager.RequerySuggested -= value;
                 }
@@ -58,11 +53,11 @@ namespace NeutronBlaster
 
         public void Execute(object parameter)
         {
-            _execute((T) parameter);
+            execute((T) parameter);
         }
 
-        private readonly Predicate<T> _canExecute;
-        private readonly Action<T> _execute;
+        private readonly Predicate<T> canExecute;
+        private readonly Action<T> execute;
     }
 
     /// <summary>
@@ -81,34 +76,34 @@ namespace NeutronBlaster
         /// <param name="canExecute">The execution status logic.</param>
         public RelayCommand(Action<object> execute, Func<bool> canExecute = null)
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            this.canExecute = canExecute;
         }
 
         public RelayCommand(Action execute, Func<bool> canExecute = null)
         {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
+            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            this.canExecute = canExecute;
         }
 
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null || _canExecute();
+            return canExecute == null || canExecute();
         }
 
         public event EventHandler CanExecuteChanged
         {
             add
             {
-                if (_canExecute != null)
+                if (canExecute != null)
                 {
                     CommandManager.RequerySuggested += value;
                 }
             }
             remove
             {
-                if (_canExecute != null)
+                if (canExecute != null)
                 {
                     CommandManager.RequerySuggested -= value;
                 }
@@ -117,20 +112,20 @@ namespace NeutronBlaster
 
         public void Execute(object parameter = null)
         {
-            switch (_execute)
+            switch (execute)
             {
-                case Action<object> a:
-                    _execute(parameter ?? "No parameter specified");
+                case Action<object> _:
+                    execute(parameter ?? "No parameter specified");
                     break;
-                case Action a:
-                    _execute();
+                case Action _:
+                    execute();
                     break;
             }
             
         }
 
-        private readonly Func<bool> _canExecute;
-        private readonly dynamic _execute;
+        private readonly Func<bool> canExecute;
+        private readonly dynamic execute;
 
         
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate"),

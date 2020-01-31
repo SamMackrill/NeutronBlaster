@@ -1,6 +1,7 @@
 using System;
 using System.Media;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace NeutronBlaster
@@ -11,13 +12,14 @@ namespace NeutronBlaster
         private readonly Router router;
         private readonly SoundPlayer player;
         private readonly string userProfilePath;
+        private SettingsViewModel settings;
 
         public MainWindowViewModel()
         {
+            settings = new SettingsViewModel();
             player = new SoundPlayer {SoundLocation = @"Resources\Hitting_Metal.wav"};
             player.Load();
-            userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
-            router = new Router($@"{userProfilePath}\Downloads");
+            router = new Router(settings.RouteLocation);
         }
 
 
@@ -83,8 +85,7 @@ namespace NeutronBlaster
         {
             try
             {
-                var logLocation = $@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous";
-                var watcher = new JournalWatcher(logLocation, router);
+                var watcher = new JournalWatcher(settings.JournalFileLocation, router);
                 watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
                 watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
                 watcher.CommanderChanged += (sender, c) =>
@@ -100,18 +101,15 @@ namespace NeutronBlaster
             }
         }
 
-        public RelayCommand ShowSettingsCommand => new RelayCommand(() =>
+        public RelayCommand ShowSettingsCommand => new RelayCommand( () =>
         {
-                // var settingsContext = new SettingsViewModel(Preferences);
-                // var settings = new SettingsWindow
-                // {
-                //     DataContext = settingsContext
-                // };
-                // settingsContext.Window = settings;
+            var settingsView = new SettingsWindow
+            {
+                DataContext = settings
+            };
 
-                // var result = settings.ShowDialog();
-                // if (result != true) return;
-
+            var result = settingsView.ShowDialog();
+            if (result != true) return;
         });
 
     }

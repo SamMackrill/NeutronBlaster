@@ -15,7 +15,7 @@ namespace NeutronBlaster
             InitializeComponent();
         }
 
-        private void CloseButtonRectangle_Click(object sender, RoutedEventArgs e)
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }

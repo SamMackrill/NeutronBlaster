@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NeutronBlaster"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
-        Icon="Resources/flat_neutron_star_32.ico"
+        Icon="../Resources/flat_neutron_star_32.ico"
         AllowsTransparency="True"
         Background="Transparent"
         Title="{Binding Path=Title}"
@@ -16,53 +16,6 @@
         MinWidth="355"
         SizeToContent="WidthAndHeight"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
-
-    <Window.Resources>
-
-        <Style x:Key="DefaultStyle" TargetType="{x:Type FrameworkElement}">
-            <Setter Property="Control.Foreground" Value="#FB651D"/>
-            <Setter Property="Control.Background" Value="#242424"/>
-        </Style>
-
-        <Style TargetType="Label" BasedOn="{StaticResource DefaultStyle}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-
-        <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultStyle}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-
-        <Style x:Key="FadeOutButton" TargetType="{x:Type Button}" BasedOn="{StaticResource DefaultStyle}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="Transparent">
-                            <ContentPresenter/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="Control.MouseEnter">
-                    <BeginStoryboard>
-                        <Storyboard >
-                            <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="Opacity"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="Control.MouseLeave">
-                    <BeginStoryboard>
-                        <Storyboard >
-                            <DoubleAnimation Duration="0:0:0.2" To="0.4" Storyboard.TargetProperty="Opacity"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
-
-    </Window.Resources>
 
     <Border BorderBrush="#FB651D" BorderThickness="3" CornerRadius="20" Background="#242424">
         <Grid ShowGridLines="False">
@@ -89,7 +42,6 @@
                        LastChildFill="true" 
                        Margin="0,0,10,0">
 
-
                 <Button DockPanel.Dock="Right"  
                         Padding="0" 
                         Opacity="0.6"
@@ -98,9 +50,9 @@
                         Height="24" Width="24"
                         Background="Transparent"
                         Style="{StaticResource FadeOutButton}"
-                        Click="CloseButtonRectangle_Click" >
+                        Click="CloseButton_Click" >
 
-                    <Image Source="Resources/close.png"  Width="24" />
+                    <Image Source="../Resources/close.png"  Width="24" />
                 </Button>
 
                 <Button DockPanel.Dock="Right"  
@@ -115,7 +67,7 @@
                         ToolTip="Settings"
                         Command="{Binding Path=ShowSettingsCommand, Mode=OneWay}">
 
-                    <Image Source="Resources/settings3.png"  Width="24" />
+                    <Image Source="../Resources/settings3.png"  Width="24" />
                 </Button>
 
                 <Label Padding="0" FontWeight="DemiBold" Content="{Binding Path=Title}" />
