@@ -54,44 +54,21 @@
             </Grid.RowDefinitions>
 
 
-            <DockPanel x:Name="TitleBar" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="#242424" Height="24" HorizontalAlignment="Stretch" LastChildFill="true" Margin="0">
+            <DockPanel x:Name="TitleBar" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" 
+                       Background="#242424" 
+                       Height="24" 
+                       HorizontalAlignment="Stretch" 
+                       LastChildFill="true" 
+                       Margin="0,0,10,0">
 
-                <Button DockPanel.Dock="Right" VerticalAlignment="Center" BorderThickness="0" Height="20" Width="20" Click="CloseButtonRectangle_Click" >
-                    <Button.Template>
-                        <ControlTemplate>
-                            <Canvas>
-                                <Canvas.Triggers>
-                                    <!-- Make semi-opaque when mouse is over close button -->
-                                    <EventTrigger RoutedEvent="Canvas.MouseEnter">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation To="0.6" Duration="0:0:0.05" Storyboard.TargetName="border" Storyboard.TargetProperty="Opacity" AccelerationRatio="1" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                    <!-- Make fully-opaque when mouse moves away from close button -->
-                                    <EventTrigger RoutedEvent="Canvas.MouseLeave">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation To="1" Duration="0:0:0.05" Storyboard.TargetName="border" Storyboard.TargetProperty="Opacity" AccelerationRatio="1" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                    <!-- Make fully-opaque when mouse is down and over close button -->
-                                    <EventTrigger RoutedEvent="Canvas.MouseLeftButtonDown">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation To="1" Duration="0:0:0.05" Storyboard.TargetName="border" Storyboard.TargetProperty="Opacity" AccelerationRatio="1" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                </Canvas.Triggers>
-                            </Canvas>
-                        </ControlTemplate>
-                    </Button.Template>
-
-                    <Image Source="../Resources/close.png" />
-                    
+                <Button DockPanel.Dock="Right"  
+                        Padding="0" 
+                        VerticalAlignment="Center" 
+                        BorderThickness="0" 
+                        Height="24" Width="24"
+                        Background="Transparent"
+                        Click="CloseButtonRectangle_Click" >
+                    <Image Source="Resources/close.png"  Width="24" />
                 </Button>
 
                 <Label Padding="0" FontWeight="DemiBold" Content="{Binding Path=Title}" />
@@ -111,33 +88,5 @@
 
         </Grid>
     </Border>
-
- <!--    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <Label Grid.Row="0" Grid.Column="0"
-               Content="Current System:"
-               MouseDoubleClick="Control_OnMouseDoubleClick"/>
-        <Label Grid.Row="0" Grid.Column="1"
-               Content="{Binding Path=CurrentSystem}"/>
-
-        <Label Grid.Row="1" Grid.Column="0"
-               Content="Last Route Location:"/>
-        <Label Grid.Row="1" Grid.Column="1"
-               Content="{Binding Path=LastSystemOnRoute}"/>
-
-        <Label Grid.Row="2" Grid.Column="0"
-               Content="Target System:"/>
-        <Label Grid.Row="2" Grid.Column="1"
-               Content="{Binding Path=TargetSystem}"/>
-    </Grid> -->
 
 </Window>
