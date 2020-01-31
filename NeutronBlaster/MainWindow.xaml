@@ -56,7 +56,7 @@
 
             <DockPanel x:Name="TitleBar" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="#242424" Height="24" HorizontalAlignment="Stretch" LastChildFill="true" Margin="0">
 
-                <Button DockPanel.Dock="Right" VerticalAlignment="Center" BorderThickness="0" Height="20" Width="20" Click="CloseButtonRectangle_Click">
+                <Button DockPanel.Dock="Right" VerticalAlignment="Center" BorderThickness="0" Height="20" Width="20" Click="CloseButtonRectangle_Click" >
                     <Button.Template>
                         <ControlTemplate>
                             <Canvas>
@@ -86,14 +86,12 @@
                                         </BeginStoryboard>
                                     </EventTrigger>
                                 </Canvas.Triggers>
-
-                                <Rectangle Name="border" Width="20" Height="20" Stroke="Black" StrokeThickness="2" RadiusX="3" RadiusY="3" Fill="#FB651D" />
-                                <Line X1="5"  Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="3" StrokeEndLineCap="Round" StrokeStartLineCap="Round" />
-                                <Line X1="15" Y1="5" X2="5"  Y2="15" Stroke="White" StrokeThickness="3" StrokeEndLineCap="Round" StrokeStartLineCap="Round" />
-
                             </Canvas>
                         </ControlTemplate>
                     </Button.Template>
+
+                    <Image Source="../Resources/close.png" />
+                    
                 </Button>
 
                 <Label Padding="0" FontWeight="DemiBold" Content="{Binding Path=Title}" />

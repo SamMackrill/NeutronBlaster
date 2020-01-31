@@ -102,7 +102,7 @@ namespace NeutronBlaster
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            Console.WriteLine($"line: {line}");
+                            //Console.WriteLine($"line: {line}");
                             if (string.IsNullOrWhiteSpace(line)) continue;
                             LogEvent logEvent;
                             try

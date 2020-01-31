@@ -21,6 +21,7 @@
   <ItemGroup>
     <Resource Include="Resources\flat_neutron_star_32.ico" />
     <Resource Include="Resources\neutron_star_32.ico" />
+    <Resource Include="Resources\close.png" />
     <Content Include="Resources\Hitting_Metal.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
