@@ -5,20 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeutronBlaster"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance local:MainWindowViewModel}" 
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
         Icon="Resources/flat_neutron_star_32.ico"
-        Background="#242424"
-        Foreground="#FB651D"
+        AllowsTransparency="True"
+        Background="Transparent"
         Title="{Binding Path=Title}"
+        WindowStyle="None"
+        ResizeMode="NoResize"
         d:DesignHeight="100" d:DesignWidth="400"
         MinWidth="355"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.Resources>
 
         <Style x:Key="DefaultStyle" TargetType="{x:Type FrameworkElement}">
             <Setter Property="Control.Foreground" Value="#FB651D"/>
-            <Setter Property="Control.Background" Value="Transparent"/>
+            <Setter Property="Control.Background" Value="#242424"/>
         </Style>
 
         <Style TargetType="Label" BasedOn="{StaticResource DefaultStyle}">
@@ -26,9 +29,92 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-     </Window.Resources>
-       
-    <Grid>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultStyle}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </Window.Resources>
+
+    <Border BorderBrush="#FB651D" BorderThickness="3" CornerRadius="20" Background="#242424">
+        <Grid ShowGridLines="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="13"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="13"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2"/>
+            </Grid.RowDefinitions>
+
+
+            <DockPanel x:Name="TitleBar" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="#242424" Height="24" HorizontalAlignment="Stretch" LastChildFill="true" Margin="0">
+
+                <Button DockPanel.Dock="Right" VerticalAlignment="Center" BorderThickness="0" Height="20" Width="20" Click="CloseButtonRectangle_Click">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Canvas>
+                                <Canvas.Triggers>
+                                    <!-- Make semi-opaque when mouse is over close button -->
+                                    <EventTrigger RoutedEvent="Canvas.MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation To="0.6" Duration="0:0:0.05" Storyboard.TargetName="border" Storyboard.TargetProperty="Opacity" AccelerationRatio="1" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <!-- Make fully-opaque when mouse moves away from close button -->
+                                    <EventTrigger RoutedEvent="Canvas.MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation To="1" Duration="0:0:0.05" Storyboard.TargetName="border" Storyboard.TargetProperty="Opacity" AccelerationRatio="1" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <!-- Make fully-opaque when mouse is down and over close button -->
+                                    <EventTrigger RoutedEvent="Canvas.MouseLeftButtonDown">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation To="1" Duration="0:0:0.05" Storyboard.TargetName="border" Storyboard.TargetProperty="Opacity" AccelerationRatio="1" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Canvas.Triggers>
+
+                                <Rectangle Name="border" Width="20" Height="20" Stroke="Black" StrokeThickness="2" RadiusX="3" RadiusY="3" Fill="#FB651D" />
+                                <Line X1="5"  Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="3" StrokeEndLineCap="Round" StrokeStartLineCap="Round" />
+                                <Line X1="15" Y1="5" X2="5"  Y2="15" Stroke="White" StrokeThickness="3" StrokeEndLineCap="Round" StrokeStartLineCap="Round" />
+
+                            </Canvas>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Label Padding="0" FontWeight="DemiBold" Content="{Binding Path=Title}" />
+
+            </DockPanel>
+
+
+            <Label Padding="0" Grid.Row="2" Grid.Column="1" Content="Current System:" MouseDoubleClick="CurrentSystem_OnMouseDoubleClick"/>
+            <Label Grid.Row="2" Grid.Column="2" Content="{Binding Path=CurrentSystem}" MouseDoubleClick="CurrentSystem_OnMouseDoubleClick"/>
+
+            <Label Padding="0" Grid.Row="3" Grid.Column="1" Content="Last Route Location:" MouseDoubleClick="LastSystemOnRoute_OnMouseDoubleClick"/>
+            <Label Grid.Row="3" Grid.Column="2" Content="{Binding Path=LastSystemOnRoute}" MouseDoubleClick="LastSystemOnRoute_OnMouseDoubleClick"/>
+
+            <Label Padding="0" Grid.Row="4" Grid.Column="1" Content="Target System:" MouseDoubleClick="TargetSystem_OnMouseDoubleClick"/>
+            <Label Grid.Row="4" Grid.Column="2" Content="{Binding Path=TargetSystem}" MouseDoubleClick="TargetSystem_OnMouseDoubleClick"/>
+
+
+        </Grid>
+    </Border>
+
+ <!--    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -39,21 +125,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" 
-               Content="Current System:" 
+        <Label Grid.Row="0" Grid.Column="0"
+               Content="Current System:"
                MouseDoubleClick="Control_OnMouseDoubleClick"/>
         <Label Grid.Row="0" Grid.Column="1"
-               Content="{Binding Path=CurrentSystem}"/>        
+               Content="{Binding Path=CurrentSystem}"/>
 
-        <Label Grid.Row="1" Grid.Column="0" 
+        <Label Grid.Row="1" Grid.Column="0"
                Content="Last Route Location:"/>
         <Label Grid.Row="1" Grid.Column="1"
                Content="{Binding Path=LastSystemOnRoute}"/>
 
-        <Label Grid.Row="2" Grid.Column="0" 
+        <Label Grid.Row="2" Grid.Column="0"
                Content="Target System:"/>
         <Label Grid.Row="2" Grid.Column="1"
                Content="{Binding Path=TargetSystem}"/>
-    </Grid>
+    </Grid> -->
 
 </Window>

@@ -63,15 +63,15 @@ namespace NeutronBlaster
                 targetSystem = value;
                 Console.WriteLine($"TargetSystem: {value}");
                 OnPropertyChanged();
-                UpdateTarget();
+                SetClipboard(targetSystem);
             }
         }
 
-        private Thread UpdateTarget()
+        public Thread SetClipboard(string text)
         {
             var thread = new Thread(() =>
             {
-                Clipboard.SetText(targetSystem);
+                Clipboard.SetText(text);
                 player.Play();
             });
             thread.SetApartmentState(ApartmentState.STA);
