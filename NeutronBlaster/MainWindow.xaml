@@ -14,6 +14,20 @@
         MinWidth="355"
         SizeToContent="WidthAndHeight">
 
+    <Window.Resources>
+
+        <Style x:Key="DefaultStyle" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Control.Foreground" Value="#FB651D"/>
+            <Setter Property="Control.Background" Value="Transparent"/>
+        </Style>
+
+        <Style TargetType="Label" BasedOn="{StaticResource DefaultStyle}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+     </Window.Resources>
+       
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -27,42 +41,19 @@
 
         <Label Grid.Row="0" Grid.Column="0" 
                Content="Current System:" 
-               Background="Transparent"
-               HorizontalAlignment="Left" 
-               VerticalAlignment="Center"
-               Foreground="#FB651D" MouseDoubleClick="Control_OnMouseDoubleClick"/>
+               MouseDoubleClick="Control_OnMouseDoubleClick"/>
         <Label Grid.Row="0" Grid.Column="1"
-               Content="{Binding Path=CurrentSystem}" 
-               Background="Transparent"
-               HorizontalAlignment="Left" 
-               VerticalAlignment="Center"
-               Foreground="#FB651D" />        
+               Content="{Binding Path=CurrentSystem}"/>        
 
         <Label Grid.Row="1" Grid.Column="0" 
-               Content="Last Route Location:" 
-               Background="Transparent"
-               HorizontalAlignment="Left" 
-               VerticalAlignment="Center"
-               Foreground="#FB651D"/>
+               Content="Last Route Location:"/>
         <Label Grid.Row="1" Grid.Column="1"
-               Content="{Binding Path=LastSystemOnRoute}" 
-               Background="Transparent"
-               HorizontalAlignment="Left" 
-               VerticalAlignment="Center"
-               Foreground="#FB651D" />
+               Content="{Binding Path=LastSystemOnRoute}"/>
 
         <Label Grid.Row="2" Grid.Column="0" 
-               Content="Target System:" 
-               Background="Transparent"
-               HorizontalAlignment="Left" 
-               VerticalAlignment="Center"
-               Foreground="#FB651D"/>
+               Content="Target System:"/>
         <Label Grid.Row="2" Grid.Column="1"
-               Content="{Binding Path=TargetSystem}" 
-               Background="Transparent"
-               HorizontalAlignment="Left" 
-               VerticalAlignment="Center"
-               Foreground="#FB651D" />
+               Content="{Binding Path=TargetSystem}"/>
     </Grid>
 
 </Window>
