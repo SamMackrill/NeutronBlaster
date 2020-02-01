@@ -76,7 +76,7 @@
                     Style="{StaticResource FadeOutButton}"
                     Command="{Binding Path=ChooseJournalFileLocationCommand, Mode=OneWay}" >
 
-                <Image Source="../Resources/close.png"  Width="16" />
+                <Image Source="../Resources/folder.png"  Width="16" />
             </Button>
 
             <Label Padding="0" Grid.Row="3" Grid.Column="1" Content="Path to Route Files:" />
@@ -95,7 +95,7 @@
                     Style="{StaticResource FadeOutButton}"
                     Command="{Binding Path=ChooseRouteLocationCommand, Mode=OneWay}" >
 
-                <Image Source="../Resources/close.png"  Width="16" />
+                <Image Source="../Resources/folder.png"  Width="16" />
             </Button>
 
         </Grid>
