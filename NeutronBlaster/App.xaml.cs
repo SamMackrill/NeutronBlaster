@@ -10,7 +10,7 @@ namespace NeutronBlaster
     /// </summary>
     public partial class App : Application
     {
-        private static string applicationName;
+        public static string applicationName;
 
         private void Application_Start(object sender, StartupEventArgs e)
         {
