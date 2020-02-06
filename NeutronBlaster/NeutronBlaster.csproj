@@ -6,12 +6,28 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Resources\flat_neutron_star_32.ico</ApplicationIcon>
+    <Authors>Sam Mackrill</Authors>
+    <Company />
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>flat_neutron_star_32.ico</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/SamMackrill/NeutronBlaster</RepositoryUrl>
+    <PackageTags>EliteDangerous</PackageTags>
+    <Description>Blast through the Neutron Super Highway</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="NeutronBlaster.Test\**" />
     <EmbeddedResource Remove="NeutronBlaster.Test\**" />
     <None Remove="NeutronBlaster.Test\**" />
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="Resources\flat_neutron_star_32.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <Page Remove="NeutronBlaster.Test\**" />
   </ItemGroup>
 
