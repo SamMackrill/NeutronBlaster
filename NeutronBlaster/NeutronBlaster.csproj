@@ -1,32 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Resources\flat_neutron_star_32.ico</ApplicationIcon>
-    <Authors>Sam Mackrill</Authors>
+    <Authors>SamMackrill</Authors>
     <Company />
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIcon>flat_neutron_star_32.ico</PackageIcon>
+    <PackageIcon>flat_neutron_star_128.png</PackageIcon>
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/SamMackrill/NeutronBlaster</RepositoryUrl>
     <PackageTags>EliteDangerous</PackageTags>
     <Description>Blast through the Neutron Super Highway</Description>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="NeutronBlaster.Test\**"/>
     <EmbeddedResource Remove="NeutronBlaster.Test\**"/>
     <None Remove="NeutronBlaster.Test\**"/>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="Resources\flat_neutron_star_32.ico">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
     <Page Remove="NeutronBlaster.Test\**"/>
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +29,9 @@
   <ItemGroup>
     <Resource Include="Resources\flat_neutron_star_32.ico"/>
     <Resource Include="Resources\neutron_star_32.ico"/>
+    <Content Include="Resources\flat_neutron_star_128.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\close.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

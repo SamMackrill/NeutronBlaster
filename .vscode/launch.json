@@ -8,7 +8,7 @@
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "build debug",
             "program": "${workspaceFolder}/NeutronBlaster/bin/Debug/netcoreapp3.1/NeutronBlaster.dll",
             "args": [],
             "cwd": "${workspaceFolder}/NeutronBlaster",

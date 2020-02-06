@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NeutronBlaster</id>
+    <version>1.0.0</version>
+    <title>Neutron Blaster</title>
+    <authors>SamMackril</authors>
+    <owners>SamMackrill</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Blast through the Neutron Super Highway</description>
+    <license type="expression">MIT</license>
+    <icon>Resources\flat_neutron_star_128.png</icon>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1" />
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework=".NETCoreApp3.1">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WindowsForms" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="bin\Release\netcoreapp3.1\*.*" target="lib\net45\" exclude="**\*.pdb;**\*.nupkg;**\*.vshost.*;**\*.dev.json"/>
+    <file src="Resources\flat_neutron_star_128.png" target="Resources\" />
+    <file src="Resources\Hitting_Metal.wav" target="Resources\" />
+  </files>
+</package>
