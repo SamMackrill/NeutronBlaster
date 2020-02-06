@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -15,11 +15,10 @@
     <PackageTags>EliteDangerous</PackageTags>
     <Description>Blast through the Neutron Super Highway</Description>
   </PropertyGroup>
-
   <ItemGroup>
-    <Compile Remove="NeutronBlaster.Test\**" />
-    <EmbeddedResource Remove="NeutronBlaster.Test\**" />
-    <None Remove="NeutronBlaster.Test\**" />
+    <Compile Remove="NeutronBlaster.Test\**"/>
+    <EmbeddedResource Remove="NeutronBlaster.Test\**"/>
+    <None Remove="NeutronBlaster.Test\**"/>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -28,16 +27,14 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <Page Remove="NeutronBlaster.Test\**" />
+    <Page Remove="NeutronBlaster.Test\**"/>
   </ItemGroup>
-
   <ItemGroup>
-    <Compile Remove="AssemblyInfo.cs" />
+    <Compile Remove="AssemblyInfo.cs"/>
   </ItemGroup>
-
   <ItemGroup>
-    <Resource Include="Resources\flat_neutron_star_32.ico" />
-    <Resource Include="Resources\neutron_star_32.ico" />
+    <Resource Include="Resources\flat_neutron_star_32.ico"/>
+    <Resource Include="Resources\neutron_star_32.ico"/>
     <Resource Include="Resources\close.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -46,15 +43,17 @@
     </Resource>
     <Resource Include="Resources\settings2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>    
+    </Resource>
     <Resource Include="Resources\settings3.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\folder.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Content Include="Resources\Hitting_Metal.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Models\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -62,11 +61,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <None Update="Models\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="squirrel.windows" Version="1.9.0"/>
   </ItemGroup>
 </Project>
