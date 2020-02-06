@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 using NeutronBlaster.Models;
@@ -11,8 +12,10 @@ namespace NeutronBlaster
     public partial class App : Application
     {
         public static string applicationName;
+        private MainWindowViewModel context;
+        private Task update = Task.FromResult(true);
 
-        private void Application_Start(object sender, StartupEventArgs e)
+        private async void Application_Start(object sender, StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
@@ -29,15 +32,25 @@ namespace NeutronBlaster
                 Settings.Default.RouteLocation = $@"{userProfilePath}\Downloads";
             }
 
-            var windowViewModel = new MainWindowViewModel();
+            context = new MainWindowViewModel();
             var window = new MainWindow
             {
-                DataContext = windowViewModel
+                DataContext = context
             };
 
             window.Show();
 
-            windowViewModel.Begin();
+            context.Begin();
+
+            try
+            {
+                update = context.CheckForUpdates(e.Args);
+                await update;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
@@ -45,9 +58,11 @@ namespace NeutronBlaster
             MessageBox.Show((e.ExceptionObject as Exception)?.Message ?? "Unknown", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private void Application_Exit(object sender, ExitEventArgs e)
+        private async void Application_Exit(object sender, ExitEventArgs e)
         {
             Settings.Default.Save();
+            await update.ContinueWith(ex => { });
+            context?.Dispose();
         }
     }
 }

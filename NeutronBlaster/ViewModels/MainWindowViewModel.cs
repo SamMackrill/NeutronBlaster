@@ -15,7 +15,7 @@ namespace NeutronBlaster
 
         private readonly Router router;
         private readonly SoundPlayer player;
-        private readonly string releasePath = "";
+        private readonly string releasePath = "https://neutron-blaster.s3.amazonaws.com";
         private SettingsViewModel settings;
 
         public MainWindowViewModel()
@@ -168,7 +168,6 @@ namespace NeutronBlaster
                 UpdateInformation = "Checking...";
 
                 string latestVersion;
-                //using (var updateManager = new UpdateManager.GitHubUpdateManager(releasePath, App.applicationName))
                 using (var updateManager = new UpdateManager(releasePath, App.applicationName))
                 {
                     void OnDo(string caller, Action<Version> doAction, Version v = null)
@@ -250,6 +249,11 @@ namespace NeutronBlaster
 
         private UpdateInfo updates;
 
+        public void Dispose()
+        {
+            UpdateAvailable = false;
+            updates = null;
+        }
 
         private static string GetCaller([CallerMemberName] string caller = null)
         {
