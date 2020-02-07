@@ -5,9 +5,9 @@ Takes output from here: https://www.spansh.co.uk/plotter
 Monitors where you jump to and populates the Clipboard with the next destination, then plays a confimation sound
 Especially useful in VR, so you don't have to remove your headset
 
-![alt text](https://raw.githubusercontent.com/SamMackrill/NeutronBlaster/master/Main.png "Main window")
+![alt text](https://raw.githubusercontent.com/SamMackrill/NeutronBlaster/master/Main.png "Main")
 
-![alt text](https://raw.githubusercontent.com/SamMackrill/NeutronBlaster/master/Settings.png "Main window")
+![alt text](https://raw.githubusercontent.com/SamMackrill/NeutronBlaster/master/Settings.png "Settings")
 
 ### Acknowledgements:
 * most icons from: https://www.iconsdb.com/ with color: #FB651D
