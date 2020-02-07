@@ -10,19 +10,26 @@
     <Description>Blast through the Neutron Super Highway</Description>
     <AssemblyVersion>1.0.1</AssemblyVersion>
     <FileVersion>1.0.1</FileVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="NeutronBlaster.Test\**"/>
-    <EmbeddedResource Remove="NeutronBlaster.Test\**"/>
-    <None Remove="NeutronBlaster.Test\**"/>
-    <Page Remove="NeutronBlaster.Test\**"/>
+    <Compile Remove="NeutronBlaster.Test\**" />
+    <EmbeddedResource Remove="NeutronBlaster.Test\**" />
+    <None Remove="NeutronBlaster.Test\**" />
+    <Page Remove="NeutronBlaster.Test\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="AssemblyInfo.cs"/>
+    <Compile Remove="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\flat_neutron_star_32.ico"/>
-    <Resource Include="Resources\neutron_star_32.ico"/>
+    <None Remove="NeutronBlaster.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\flat_neutron_star_32.ico" />
+    <Resource Include="Resources\neutron_star_32.ico" />
+    <Content Include="NeutronBlaster.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\flat_neutron_star_128.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -46,19 +53,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Models\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Models\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="squirrel.windows" Version="1.9.0"/>
+    <PackageReference Include="squirrel.windows" Version="1.9.0" />
   </ItemGroup>
 </Project>

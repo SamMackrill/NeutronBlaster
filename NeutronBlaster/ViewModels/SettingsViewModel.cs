@@ -1,8 +1,5 @@
 
-using System.IO;
 using System.Windows.Forms;
-
-using NeutronBlaster.Models;
 
 namespace NeutronBlaster
 {
@@ -11,22 +8,22 @@ namespace NeutronBlaster
 
         public string JournalFileLocation
         {
-            get => Settings.Default.JournalFileLocation;
+            get => App.Settings.JournalFileLocation;
             set
             {
-                if (Settings.Default.JournalFileLocation == value) return;
-                Settings.Default.JournalFileLocation = value;
+                if (App.Settings.JournalFileLocation == value) return;
+                App.Settings.JournalFileLocation = value;
                 OnPropertyChanged();
             }
         }
 
         public string RouteLocation
         {
-            get => Settings.Default.RouteLocation;
+            get => App.Settings.RouteLocation;
             set
             {
-                if (Settings.Default.RouteLocation == value) return;
-                Settings.Default.RouteLocation = value;
+                if (App.Settings.RouteLocation == value) return;
+                App.Settings.RouteLocation = value;
                 OnPropertyChanged();
             }
         }
@@ -42,9 +39,9 @@ namespace NeutronBlaster
                 if (result != DialogResult.OK || string.IsNullOrWhiteSpace(fbd.SelectedPath)) return;
 
                 JournalFileLocation = fbd.SelectedPath;
-
             }
         });
+
         public RelayCommand ChooseRouteLocationCommand => new RelayCommand(() =>
         {
             using (var fbd = new FolderBrowserDialog())
@@ -56,8 +53,8 @@ namespace NeutronBlaster
                 if (result != DialogResult.OK || string.IsNullOrWhiteSpace(fbd.SelectedPath)) return;
 
                 RouteLocation = fbd.SelectedPath;
-
             }
         });
     }
+
 }

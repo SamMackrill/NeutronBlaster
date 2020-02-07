@@ -168,7 +168,7 @@ namespace NeutronBlaster
                 UpdateInformation = "Checking...";
 
                 string latestVersion;
-                using (var updateManager = new UpdateManager(releasePath, App.applicationName))
+                using (var updateManager = new UpdateManager(releasePath, App.ApplicationName))
                 {
                     void OnDo(string caller, Action<Version> doAction, Version v = null)
                     {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls.Primitives;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace NeutronBlaster
@@ -27,21 +25,20 @@ namespace NeutronBlaster
        
         private void CurrentSystem_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var context = this.DataContext as MainWindowViewModel;
-            if (context == null) return;
-            context.SetClipboard(context.CurrentSystem);
+            var context = DataContext as MainWindowViewModel;
+            context?.SetClipboard(context.CurrentSystem);
         }
+
         private void LastSystemOnRoute_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var context = this.DataContext as MainWindowViewModel;
-            if (context == null) return;
-            context.SetClipboard(context.LastSystemOnRoute);
+            var context = DataContext as MainWindowViewModel;
+            context?.SetClipboard(context.LastSystemOnRoute);
         }
+
         private void TargetSystem_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var context = this.DataContext as MainWindowViewModel;
-            if (context == null) return;
-            context.SetClipboard(context.TargetSystem);
+            var context = DataContext as MainWindowViewModel;
+            context?.SetClipboard(context.TargetSystem);
         }
     }
 }
