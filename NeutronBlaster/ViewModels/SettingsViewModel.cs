@@ -1,10 +1,14 @@
-
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace NeutronBlaster
 {
     public class SettingsViewModel: BaseViewModel
     {
+        public event PropertyChangedEventHandler JournalFileLocationChanged;
+        public event PropertyChangedEventHandler RouteLocationChanged;
+        public event PropertyChangedEventHandler ClipboadSetSoundChanged;
+
 
         public string JournalFileLocation
         {
@@ -14,6 +18,7 @@ namespace NeutronBlaster
                 if (App.Settings.JournalFileLocation == value) return;
                 App.Settings.JournalFileLocation = value;
                 OnPropertyChanged();
+                JournalFileLocationChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(JournalFileLocation)));
             }
         }
 
@@ -25,35 +30,65 @@ namespace NeutronBlaster
                 if (App.Settings.RouteLocation == value) return;
                 App.Settings.RouteLocation = value;
                 OnPropertyChanged();
+                RouteLocationChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RouteLocation)));
+            }
+        }
+
+        public string ClipboardSetSound
+        {
+            get => App.Settings.ClipboadSetSound;
+            set
+            {
+                if (App.Settings.ClipboadSetSound == value) return;
+                App.Settings.ClipboadSetSound = value;
+                OnPropertyChanged();
+                ClipboadSetSoundChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ClipboardSetSound)));
             }
         }
 
         public RelayCommand ChooseJournalFileLocationCommand => new RelayCommand(() =>
         {
-            using (var fbd = new FolderBrowserDialog())
+            using var browser = new FolderBrowserDialog
             {
-                fbd.Description = "Select Location of Elite Dangerous Journal Files";
-                fbd.SelectedPath = JournalFileLocation;
-                var result = fbd.ShowDialog();
+                Description = "Select Location of Elite Dangerous Journal Files", 
+                SelectedPath = JournalFileLocation
+            };
+            var result = browser.ShowDialog();
 
-                if (result != DialogResult.OK || string.IsNullOrWhiteSpace(fbd.SelectedPath)) return;
+            if (result != DialogResult.OK || string.IsNullOrWhiteSpace(browser.SelectedPath)) return;
 
-                JournalFileLocation = fbd.SelectedPath;
-            }
+            JournalFileLocation = browser.SelectedPath;
         });
 
         public RelayCommand ChooseRouteLocationCommand => new RelayCommand(() =>
         {
-            using (var fbd = new FolderBrowserDialog())
+            using var browser = new FolderBrowserDialog
             {
-                fbd.Description = "Select Location of Neutron Route CSV Files";
-                fbd.SelectedPath = RouteLocation;
-                var result = fbd.ShowDialog();
+                Description = "Select Location of Neutron Route CSV Files", 
+                SelectedPath = RouteLocation
+            };
+            var result = browser.ShowDialog();
 
-                if (result != DialogResult.OK || string.IsNullOrWhiteSpace(fbd.SelectedPath)) return;
+            if (result != DialogResult.OK || string.IsNullOrWhiteSpace(browser.SelectedPath)) return;
 
-                RouteLocation = fbd.SelectedPath;
-            }
+            RouteLocation = browser.SelectedPath;
+        });
+
+        public RelayCommand ChooseSoundFileCommand => new RelayCommand(() =>
+        {
+            using var browser = new OpenFileDialog
+            {
+                Title = "Select Sound to play when clipboard is set",
+                FileName = ClipboardSetSound,
+                Filter = "WAV files (*.wav)|*.wav",
+                DefaultExt = ".wav",
+                CheckFileExists = true
+            };
+            var result = browser.ShowDialog();
+
+            if (result != DialogResult.OK || string.IsNullOrWhiteSpace(browser.FileName)) return;
+
+            ClipboardSetSound = browser.FileName;
         });
     }
 

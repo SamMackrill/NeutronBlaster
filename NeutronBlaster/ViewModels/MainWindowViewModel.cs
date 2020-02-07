@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Media;
 using System.Threading;
@@ -15,17 +16,23 @@ namespace NeutronBlaster
 
         private readonly Router router;
         private readonly SoundPlayer player;
-        private readonly string releasePath = "https://neutron-blaster.s3.amazonaws.com";
-        private SettingsViewModel settings;
+        private const string ReleasePath = "https://neutron-blaster.s3.amazonaws.com";
+        private readonly SettingsViewModel settings;
 
         public MainWindowViewModel()
         {
             settings = new SettingsViewModel();
-            player = new SoundPlayer {SoundLocation = @"Resources\Hitting_Metal.wav"};
-            player.Load();
+            settings.ClipboadSetSoundChanged += SetClipboardSound;
+            player = new SoundPlayer {SoundLocation = settings.ClipboardSetSound};
             router = new Router(settings.RouteLocation);
         }
 
+        private void SetClipboardSound(object sender, PropertyChangedEventArgs e)
+        {
+            if (player == null) return;
+            player.SoundLocation = settings.ClipboardSetSound;
+            player.Play();
+        }
 
         private string commander;
         public string Title => $"Neutron Blaster{(commander == null ? "" : $": {commander}")}";
@@ -42,7 +49,6 @@ namespace NeutronBlaster
                 OnPropertyChanged();
             }
         }
-
 
         private string lastLocationOnRoute;
         public string LastSystemOnRoute
@@ -78,7 +84,7 @@ namespace NeutronBlaster
             var thread = new Thread(() =>
             {
                 Clipboard.SetText(text);
-                player.Play();
+                player.PlaySync();
             });
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
@@ -89,6 +95,8 @@ namespace NeutronBlaster
         {
             try
             {
+                player.LoadAsync();
+
                 var watcher = new JournalWatcher(settings.JournalFileLocation, router);
                 watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
                 watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
@@ -107,13 +115,9 @@ namespace NeutronBlaster
 
         public RelayCommand ShowSettingsCommand => new RelayCommand( () =>
         {
-            var settingsView = new SettingsWindow
-            {
-                DataContext = settings
-            };
+            var settingsView = new SettingsWindow { DataContext = settings };
 
-            var result = settingsView.ShowDialog();
-            if (result != true) return;
+            settingsView.ShowDialog();
         });
 
         private string version;
@@ -151,6 +155,7 @@ namespace NeutronBlaster
                 OnPropertyChanged();
             }
         }
+
         public async Task CheckForUpdates(string[] args)
         {
 
@@ -168,7 +173,7 @@ namespace NeutronBlaster
                 UpdateInformation = "Checking...";
 
                 string latestVersion;
-                using (var updateManager = new UpdateManager(releasePath, App.ApplicationName))
+                using (var updateManager = new UpdateManager(ReleasePath, App.ApplicationName))
                 {
                     void OnDo(string caller, Action<Version> doAction, Version v = null)
                     {

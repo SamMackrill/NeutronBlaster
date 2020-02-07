@@ -12,7 +12,7 @@
         Title="{Binding Path=Title}"
         WindowStyle="None"
         ResizeMode="NoResize"
-        d:DesignHeight="100" d:DesignWidth="400"
+        d:DesignWidth="400"
         MinWidth="355"
         SizeToContent="WidthAndHeight"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">

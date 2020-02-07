@@ -12,8 +12,7 @@
         Background="Transparent"
         WindowStyle="None"
         ResizeMode="NoResize"
-        d:DesignHeight="100" d:DesignWidth="400"
-        MinWidth="355"
+        MinWidth="400"
         SizeToContent="WidthAndHeight"
         >
 
@@ -28,6 +27,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="2"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -76,7 +76,7 @@
                     Style="{StaticResource FadeOutButton}"
                     Command="{Binding Path=ChooseJournalFileLocationCommand, Mode=OneWay}" >
 
-                <Image Source="../Resources/folder.png"  Width="16" />
+                <Image Source="../Resources/folder.png" ToolTip="Change..." Width="16" />
             </Button>
 
             <Label Padding="0" Grid.Row="3" Grid.Column="1" Content="Path to Route Files:" />
@@ -95,7 +95,26 @@
                     Style="{StaticResource FadeOutButton}"
                     Command="{Binding Path=ChooseRouteLocationCommand, Mode=OneWay}" >
 
-                <Image Source="../Resources/folder.png"  Width="16" />
+                <Image Source="../Resources/folder.png" ToolTip="Change..." Width="16" />
+            </Button>
+
+            <Label Padding="0" Grid.Row="4" Grid.Column="1" Content="Clipboard set sound:" />
+            <TextBox Grid.Row="4" Grid.Column="2"
+                     BorderThickness="1" 
+                     Margin="4,4,0,0"
+                     MinWidth="100"
+                     Text="{Binding Path=ClipboardSetSound, Mode=TwoWay}"/>
+            <Button Grid.Row="4" Grid.Column="3"  
+                    Margin="4,0,0,0" 
+                    Opacity="0.6"
+                    VerticalAlignment="Center" 
+                    BorderThickness="0" 
+                    Height="16" Width="16"
+                    Background="Transparent"
+                    Style="{StaticResource FadeOutButton}"
+                    Command="{Binding Path=ChooseSoundFileCommand, Mode=OneWay}" >
+
+                <Image Source="../Resources/folder.png" ToolTip="Change..." Width="16" />
             </Button>
 
         </Grid>

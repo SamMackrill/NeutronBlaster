@@ -23,7 +23,7 @@ namespace NeutronBlaster
             ApplicationName = typeof(App).Assembly.GetName().Name;
 
             settingsManager = new SettingsManager<Settings>($"{ApplicationName}.json");
-            Settings = settingsManager.Load();
+            Settings = await settingsManager.Load();
 
             var userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
             if (string.IsNullOrWhiteSpace(Settings.JournalFileLocation))

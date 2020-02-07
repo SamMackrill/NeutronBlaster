@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace NeutronBlaster
 {
@@ -17,23 +19,38 @@ namespace NeutronBlaster
             userFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), fileName);
         }
 
-        public T Load()
+        public async Task<T> Load()
         {
             if (File.Exists(userFilePath))
             {
-                Settings = JsonSerializer.Deserialize<T>(File.ReadAllText(userFilePath));
+                Settings = await DeserializeAsyncFromFile(userFilePath);
             }
             else
             {
                 var applicationFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
                 if (File.Exists(applicationFilePath))
                 {
-                    Settings = JsonSerializer.Deserialize<T>(File.ReadAllText(applicationFilePath));
+                    Settings = await DeserializeAsyncFromFile(applicationFilePath);
                 }
             }
 
             Settings ??= new T();
             return Settings;
+        }
+
+        private async Task<T> DeserializeAsyncFromFile(string filePath)
+        {
+            //return await JsonSerializer.DeserializeAsync<T>(File.ReadAllText(filePath));
+
+            await using var sourceStream = new FileStream(
+                path: filePath,
+                mode: FileMode.Open,
+                access: FileAccess.Read,
+                share: FileShare.Read,
+                bufferSize: 4096,
+                useAsync: true
+            );
+            return await JsonSerializer.DeserializeAsync<T>(sourceStream);
         }
 
         public void Save()
