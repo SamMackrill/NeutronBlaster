@@ -25,18 +25,7 @@ namespace NeutronBlaster
             settingsManager = new SettingsManager<Settings>($"{ApplicationName}.json");
             Settings = await settingsManager.Load();
 
-            var userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
-            if (string.IsNullOrWhiteSpace(Settings.JournalFileLocation))
-            {
-                Settings.JournalFileLocation = $@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous";
-            }
-
-            if (string.IsNullOrWhiteSpace(Settings.RouteLocation))
-            {
-                Settings.RouteLocation = $@"{userProfilePath}\Downloads";
-            }
-
-            context = new MainWindowViewModel();
+            context = new MainWindowViewModel(settingsManager);
             var window = new MainWindow
             {
                 DataContext = context

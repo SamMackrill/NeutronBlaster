@@ -1,5 +1,5 @@
 {
-  "JournalFileLocation": "",
+  "JournalLocation": "",
   "RouteLocation": "",
-  "ClipboadSetSound": "Resources\\Hitting_Metal.wav"
+  "ClipboardSetSound": "Resources\\Hitting_Metal.wav"
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -23,9 +23,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="NeutronBlaster.json" />
+    <None Remove="Resources\close-window.png" />
+    <None Remove="Resources\minimize-window.png" />
+    <None Remove="Resources\play.png" />
+    <None Remove="Resources\undo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\close-window.png" />
     <Resource Include="Resources\flat_neutron_star_32.ico" />
+    <Resource Include="Resources\minimize-window.png" />
     <Resource Include="Resources\neutron_star_32.ico" />
     <Content Include="NeutronBlaster.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -36,6 +42,7 @@
     <Resource Include="Resources\close.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\play.png" />
     <Resource Include="Resources\settings.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -48,6 +55,7 @@
     <Resource Include="Resources\folder.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\undo.png" />
     <Content Include="Resources\Hitting_Metal.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

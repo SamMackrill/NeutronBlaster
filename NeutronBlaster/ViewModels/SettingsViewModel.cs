@@ -1,24 +1,62 @@
+using System;
 using System.ComponentModel;
+using System.IO;
+using System.Media;
 using System.Windows.Forms;
 
 namespace NeutronBlaster
 {
     public class SettingsViewModel: BaseViewModel
     {
-        public event PropertyChangedEventHandler JournalFileLocationChanged;
+        public event PropertyChangedEventHandler JournalLocationChanged;
         public event PropertyChangedEventHandler RouteLocationChanged;
         public event PropertyChangedEventHandler ClipboadSetSoundChanged;
 
+        private readonly SettingsManager<Settings> settingsManager;
+        private readonly string userProfilePath;
 
-        public string JournalFileLocation
+        public SettingsViewModel(SettingsManager<Settings> settingsManager)
         {
-            get => App.Settings.JournalFileLocation;
+            this.settingsManager = settingsManager;
+            userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
+
+            ValidateJournalLocation();
+            ValidateRouteLocation();
+
+        }
+
+        private void ValidateJournalLocation()
+        {
+            if (!string.IsNullOrWhiteSpace(JournalLocation) && Directory.Exists(JournalLocation)) return;
+            ResetJournalLocation();
+        }
+
+        private void ResetJournalLocation()
+        {
+            JournalLocation = $@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous";
+        }
+
+        private void ValidateRouteLocation()
+        {
+            if (!string.IsNullOrWhiteSpace(RouteLocation) && Directory.Exists(RouteLocation)) return;
+            ResetRouteLocation();
+        }
+
+        private void ResetRouteLocation()
+        {
+            RouteLocation = $@"{userProfilePath}\Downloads";
+        }
+
+
+        public string JournalLocation
+        {
+            get => settingsManager.Settings.JournalLocation;
             set
             {
-                if (App.Settings.JournalFileLocation == value) return;
-                App.Settings.JournalFileLocation = value;
+                if (settingsManager.Settings.JournalLocation == value) return;
+                settingsManager.Settings.JournalLocation = value;
                 OnPropertyChanged();
-                JournalFileLocationChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(JournalFileLocation)));
+                JournalLocationChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(JournalLocation)));
             }
         }
 
@@ -36,29 +74,31 @@ namespace NeutronBlaster
 
         public string ClipboardSetSound
         {
-            get => App.Settings.ClipboadSetSound;
+            get => settingsManager.Settings.ClipboardSetSound;
             set
             {
-                if (App.Settings.ClipboadSetSound == value) return;
-                App.Settings.ClipboadSetSound = value;
+                if (settingsManager.Settings.ClipboardSetSound == value) return;
+                settingsManager.Settings.ClipboardSetSound = value;
                 OnPropertyChanged();
                 ClipboadSetSoundChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ClipboardSetSound)));
             }
         }
 
-        public RelayCommand ChooseJournalFileLocationCommand => new RelayCommand(() =>
+        public RelayCommand ChooseJournalLocationCommand => new RelayCommand(() =>
         {
             using var browser = new FolderBrowserDialog
             {
                 Description = "Select Location of Elite Dangerous Journal Files", 
-                SelectedPath = JournalFileLocation
+                SelectedPath = JournalLocation
             };
             var result = browser.ShowDialog();
 
             if (result != DialogResult.OK || string.IsNullOrWhiteSpace(browser.SelectedPath)) return;
 
-            JournalFileLocation = browser.SelectedPath;
+            JournalLocation = browser.SelectedPath;
         });
+
+        public RelayCommand ResetJournalLocationCommand => new RelayCommand(ResetJournalLocation);
 
         public RelayCommand ChooseRouteLocationCommand => new RelayCommand(() =>
         {
@@ -73,6 +113,8 @@ namespace NeutronBlaster
 
             RouteLocation = browser.SelectedPath;
         });
+
+        public RelayCommand ResetRouteLocationCommand => new RelayCommand(ResetRouteLocation);
 
         public RelayCommand ChooseSoundFileCommand => new RelayCommand(() =>
         {
@@ -90,6 +132,25 @@ namespace NeutronBlaster
 
             ClipboardSetSound = browser.FileName;
         });
+
+        public RelayCommand ResetClipboardSoundCommand => new RelayCommand(() =>
+        {
+            ClipboardSetSound = settingsManager.DefaultSettings.ClipboardSetSound;
+        });
+
+        public RelayCommand PlayClipboardSoundCommand => new RelayCommand(() =>
+        {
+            var player = new SoundPlayer { SoundLocation = ClipboardSetSound };
+            try
+            {
+                player.Play();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot play: {player.SoundLocation} because {exception.Message}");
+            }
+        });
+
     }
 
 }

@@ -11,9 +11,11 @@
         AllowsTransparency="True"
         Background="Transparent"
         WindowStyle="None"
-        ResizeMode="NoResize"
-        MinWidth="400"
+        ResizeMode="CanResize"
+        MinWidth="420"
         SizeToContent="WidthAndHeight"
+        Loaded="window_Loaded"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
         >
 
     <Border BorderBrush="#FB651D" BorderThickness="3" CornerRadius="20" Background="#242424">
@@ -22,6 +24,8 @@
                 <ColumnDefinition Width="13"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="13"/>
             </Grid.ColumnDefinitions>
@@ -35,7 +39,7 @@
             </Grid.RowDefinitions>
 
 
-            <DockPanel x:Name="TitleBar" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" 
+            <DockPanel x:Name="TitleBar" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="6" 
                        Background="#242424" 
                        Height="24" 
                        HorizontalAlignment="Stretch" 
@@ -52,7 +56,7 @@
                         Style="{StaticResource FadeOutButton}"
                         Click="CloseButton_Click" >
 
-                    <Image Source="../Resources/close.png"  Width="24" />
+                    <Image Source="../Resources/close-window.png"  Width="24" />
                 </Button>
 
                 <Label Padding="0" FontWeight="DemiBold" Content="Neutron Blaster Settings" />
@@ -65,8 +69,8 @@
                      BorderThickness="1"
                      Margin="4,4,0,0"
                      MinWidth="100"
-                     Text="{Binding Path=JournalFileLocation, Mode=TwoWay}"/>
-            <Button Grid.Row="2" Grid.Column="3"  
+                     Text="{Binding Path=JournalLocation, Mode=TwoWay}"/>
+            <Button Grid.Row="2" Grid.Column="4"  
                     Margin="4,0,0,0" 
                     Opacity="0.6"
                     VerticalAlignment="Center" 
@@ -74,7 +78,19 @@
                     Height="16" Width="16"
                     Background="Transparent"
                     Style="{StaticResource FadeOutButton}"
-                    Command="{Binding Path=ChooseJournalFileLocationCommand, Mode=OneWay}" >
+                    Command="{Binding Path=ResetJournalLocationCommand, Mode=OneWay}" >
+
+                <Image Source="../Resources/undo.png" ToolTip="Reset to default" Width="16" />
+            </Button>
+            <Button Grid.Row="2" Grid.Column="5"  
+                    Margin="4,0,0,0" 
+                    Opacity="0.6"
+                    VerticalAlignment="Center" 
+                    BorderThickness="0" 
+                    Height="16" Width="16"
+                    Background="Transparent"
+                    Style="{StaticResource FadeOutButton}"
+                    Command="{Binding Path=ChooseJournalLocationCommand, Mode=OneWay}" >
 
                 <Image Source="../Resources/folder.png" ToolTip="Change..." Width="16" />
             </Button>
@@ -85,7 +101,19 @@
                      Margin="4,4,0,0"
                      MinWidth="100"
                      Text="{Binding Path=RouteLocation, Mode=TwoWay}"/>
-            <Button Grid.Row="3" Grid.Column="3"  
+            <Button Grid.Row="3" Grid.Column="4"  
+                    Margin="4,0,0,0" 
+                    Opacity="0.6"
+                    VerticalAlignment="Center" 
+                    BorderThickness="0" 
+                    Height="16" Width="16"
+                    Background="Transparent"
+                    Style="{StaticResource FadeOutButton}"
+                    Command="{Binding Path=ResetRouteLocationCommand, Mode=OneWay}" >
+
+                <Image Source="../Resources/undo.png" ToolTip="Reset to default" Width="16" />
+            </Button>
+            <Button Grid.Row="3" Grid.Column="5"  
                     Margin="4,0,0,0" 
                     Opacity="0.6"
                     VerticalAlignment="Center" 
@@ -105,6 +133,30 @@
                      MinWidth="100"
                      Text="{Binding Path=ClipboardSetSound, Mode=TwoWay}"/>
             <Button Grid.Row="4" Grid.Column="3"  
+                    Margin="4,0,0,0" 
+                    Opacity="0.6"
+                    VerticalAlignment="Center" 
+                    BorderThickness="0" 
+                    Height="16" Width="16"
+                    Background="Transparent"
+                    Style="{StaticResource FadeOutButton}"
+                    Command="{Binding Path=PlayClipboardSoundCommand, Mode=OneWay}" >
+
+                <Image Source="../Resources/play.png" ToolTip="Play" Width="16" />
+            </Button>
+            <Button Grid.Row="4" Grid.Column="4"  
+                    Margin="4,0,0,0" 
+                    Opacity="0.6"
+                    VerticalAlignment="Center" 
+                    BorderThickness="0" 
+                    Height="16" Width="16"
+                    Background="Transparent"
+                    Style="{StaticResource FadeOutButton}"
+                    Command="{Binding Path=ResetClipboardSoundCommand, Mode=OneWay}" >
+
+                <Image Source="../Resources/undo.png" ToolTip="Reset to default" Width="16" />
+            </Button>
+            <Button Grid.Row="4" Grid.Column="5"  
                     Margin="4,0,0,0" 
                     Opacity="0.6"
                     VerticalAlignment="Center" 

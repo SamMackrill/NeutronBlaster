@@ -13,17 +13,16 @@ namespace NeutronBlaster
 {
     public class MainWindowViewModel : BaseViewModel
     {
-
         private readonly Router router;
         private readonly SoundPlayer player;
         private const string ReleasePath = "https://neutron-blaster.s3.amazonaws.com";
         private readonly SettingsViewModel settings;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(SettingsManager<Settings> settingsManager)
         {
-            settings = new SettingsViewModel();
+            settings = new SettingsViewModel(settingsManager);
             settings.ClipboadSetSoundChanged += SetClipboardSound;
-            player = new SoundPlayer {SoundLocation = settings.ClipboardSetSound};
+            player = new SoundPlayer { SoundLocation = settings.ClipboardSetSound };
             router = new Router(settings.RouteLocation);
         }
 
@@ -31,7 +30,14 @@ namespace NeutronBlaster
         {
             if (player == null) return;
             player.SoundLocation = settings.ClipboardSetSound;
-            player.Play();
+            try
+            {
+                player.Play();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot play: {player.SoundLocation} because {exception.Message}");
+            }
         }
 
         private string commander;
@@ -84,8 +90,17 @@ namespace NeutronBlaster
             var thread = new Thread(() =>
             {
                 Clipboard.SetText(text);
-                player.PlaySync();
+
+                try
+                {
+                    player.PlaySync();
+                }
+                catch (Exception)
+                {
+                    // swallow bad wav
+                }
             });
+
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             return thread;
@@ -97,7 +112,7 @@ namespace NeutronBlaster
             {
                 player.LoadAsync();
 
-                var watcher = new JournalWatcher(settings.JournalFileLocation, router);
+                var watcher = new JournalWatcher(settings.JournalLocation, router);
                 watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
                 watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
                 watcher.CommanderChanged += (sender, c) =>

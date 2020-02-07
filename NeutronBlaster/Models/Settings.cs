@@ -4,8 +4,8 @@ namespace NeutronBlaster
 {
     public class Settings
     {
-        public string JournalFileLocation { get; set; }
+        public string JournalLocation { get; set; }
         public string RouteLocation { get; set; }
-        public string ClipboadSetSound { get; set; }
+        public string ClipboardSetSound { get; set; }
     }
 }
