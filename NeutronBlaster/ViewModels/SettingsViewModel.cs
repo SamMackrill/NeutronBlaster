@@ -22,7 +22,6 @@ namespace NeutronBlaster
 
             ValidateJournalLocation();
             ValidateRouteLocation();
-
         }
 
         private void ValidateJournalLocation()
