@@ -161,8 +161,8 @@ namespace NeutronBlaster
             settingsView.ShowDialog();
         });
 
-        private string version;
-        public string Version
+        private NuGet.SemanticVersion version;
+        public NuGet.SemanticVersion Version
         {
             get => version;
             private set
@@ -173,12 +173,26 @@ namespace NeutronBlaster
             }
         }
 
+        private string update;
+        public string Update
+        {
+            get => update;
+            private set
+            {
+                if (update == value) return;
+                update = value;
+                OnPropertyChanged();
+            }
+        }
+
         public async Task CheckForUpdates(string[] args)
         {
             using (var updateManager = new UpdateManager(ReleasePath, App.ApplicationName))
             {
-                var update = await updateManager.UpdateApp();
-                Version = update?.Version.ToString() ?? "0.0.0 (dev)";
+                Version = updateManager.CurrentlyInstalledVersion();
+                var releaseEntry = await updateManager.UpdateApp();
+                if (releaseEntry==null) Update = " Latest";
+                Update = $" Restart for {releaseEntry.Version.ToString()}";
             }
         }
 

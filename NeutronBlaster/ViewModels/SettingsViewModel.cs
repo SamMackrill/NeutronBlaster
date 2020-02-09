@@ -26,7 +26,7 @@ namespace NeutronBlaster
             ValidateRouteLocation();
         }
 
-        public string Title => $"Neutron Blaster Settings V{main.Version}";
+        public string Title => $"Neutron Blaster Settings V{main.Version?.ToString() ?? "0.0.0 (dev)" }{main.Update}";
 
         private void ValidateJournalLocation()
         {
