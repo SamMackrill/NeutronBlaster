@@ -8,8 +8,8 @@
     <Company />
     <RepositoryUrl>https://github.com/SamMackrill/NeutronBlaster</RepositoryUrl>
     <Description>Blast through the Neutron Super Highway</Description>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
+    <AssemblyVersion>1.0.5</AssemblyVersion>
+    <FileVersion>1.0.5</FileVersion>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -42,7 +42,9 @@
     <Resource Include="Resources\close.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\play.png" />
+    <Resource Include="Resources\play.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\settings.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -55,7 +57,9 @@
     <Resource Include="Resources\folder.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\undo.png" />
+    <Resource Include="Resources\undo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Resources\Hitting_Metal.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -55,7 +55,6 @@ namespace NeutronBlaster
         {
             settingsManager.Save();
             await update.ContinueWith(ex => { });
-            context?.Dispose();
         }
     }
 }

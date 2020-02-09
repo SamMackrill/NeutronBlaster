@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NeutronBlaster"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:SettingsViewModel}"
-        Title="Neutron Blaster Settings"
+        Title="{Binding Path=Title}"
         Icon="../Resources/flat_neutron_star_32.ico"
         AllowsTransparency="True"
         Background="Transparent"
@@ -59,7 +59,7 @@
                     <Image Source="../Resources/close-window.png"  Width="24" />
                 </Button>
 
-                <Label Padding="0" FontWeight="DemiBold" Content="Neutron Blaster Settings" />
+                <Label Padding="0" FontWeight="DemiBold" Content="{Binding Path=Title}" />
 
             </DockPanel>
 

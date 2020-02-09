@@ -21,7 +21,7 @@ namespace NeutronBlaster
 
         public MainWindowViewModel(SettingsManager<Settings> settingsManager)
         {
-            settings = new SettingsViewModel(settingsManager);
+            settings = new SettingsViewModel(this, settingsManager);
             settings.ClipboadSetSoundChanged += SetClipboardSound;
             settings.JournalLocationChanged += RefreshJournalLocation;
             settings.RouteLocationChanged += RefreshRouteLocation;
@@ -173,137 +173,14 @@ namespace NeutronBlaster
             }
         }
 
-        private string updateInformation;
-        public string UpdateInformation
-        {
-            get => updateInformation;
-            private set
-            {
-                if (updateInformation == value) return;
-                updateInformation = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool updateAvailable;
-        public bool UpdateAvailable
-        {
-            get => updateAvailable;
-            private set
-            {
-                if (updateAvailable == value) return;
-                updateAvailable = value;
-                OnPropertyChanged();
-            }
-        }
-
         public async Task CheckForUpdates(string[] args)
         {
-
-            UpdateAvailable = false;
-
-            // if (options.Contains("U"))
-            // {
-            //     UpdateInformation = "UpdatesDisabled!";
-            //     return;
-            // }
-
-            try
+            using (var updateManager = new UpdateManager(ReleasePath, App.ApplicationName))
             {
-
-                UpdateInformation = "Checking...";
-
-                string latestVersion;
-                using (var updateManager = new UpdateManager(ReleasePath, App.ApplicationName))
-                {
-                    void OnDo(string caller, Action<Version> doAction, Version v = null)
-                    {
-                        try
-                        {
-                            doAction(v);
-                        }
-                        catch (Exception e)
-                        {
-                            UpdateInformation = $"Error in {caller}: {e.Message}";
-                        }
-                    }
-
-                    void OnAppUninstall(Version v)
-                    {
-                        OnDo(GetCaller(), v0 =>
-                        {
-                            updateManager.RemoveShortcutForThisExe();
-                        }, v);
-                    }
-
-                    void OnInitialInstall(Version v)
-                    {
-                        OnDo(GetCaller(), v0 =>
-                        {
-                            updateManager.CreateShortcutForThisExe();
-                        }, v);
-                    }
-
-                    void OnAppUpdate(Version v)
-                    {
-                        OnDo(GetCaller(), v0 =>
-                        {
-                            updateManager.CreateShortcutForThisExe();
-                        }, v);
-                    }
-
-                    void OnAppObsoleted(Version v) => OnDo(GetCaller(), v0 =>
-                    {
-                    }, v);
-
-                    void OnFirstRun() => OnDo(GetCaller(), v0 =>
-                    {
-                    });
-
-                    SquirrelAwareApp.HandleEvents(
-                        onAppUninstall: OnAppUninstall,
-                        onInitialInstall: OnInitialInstall,
-                        onAppUpdate: OnAppUpdate,
-                        onAppObsoleted: OnAppObsoleted,
-                        onFirstRun: OnFirstRun
-                    );
-
-                    updates = await updateManager.CheckForUpdate();
-
-                    Version = updates.CurrentlyInstalledVersion == null ? "development" : updates.CurrentlyInstalledVersion.Version.ToString();
-
-                    if (!updates.ReleasesToApply.Any())
-                    {
-                        UpdateInformation = "You are running the latest version.";
-                        return;
-                    }
-
-                    latestVersion = updates.ReleasesToApply.OrderBy(x => x.Version).LastOrDefault()?.Version.ToString() ?? "Unknown";
-                    UpdateInformation = $"Version: {latestVersion} available. Downloading...";
-
-                    await updateManager.DownloadReleases(updates.ReleasesToApply);
-                }
-
-                UpdateAvailable = true;
-                UpdateInformation = $"Version: {latestVersion} ready";
-            }
-            catch (Exception e)
-            {
-                UpdateInformation = $"Error while updating: {e.Message}";
+                var update = await updateManager.UpdateApp();
+                Version = update?.Version.ToString() ?? "0.0.0 (dev)";
             }
         }
 
-        private UpdateInfo updates;
-
-        public void Dispose()
-        {
-            UpdateAvailable = false;
-            updates = null;
-        }
-
-        private static string GetCaller([CallerMemberName] string caller = null)
-        {
-            return caller;
-        }
     }
 }

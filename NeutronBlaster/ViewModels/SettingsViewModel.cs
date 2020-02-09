@@ -13,16 +13,20 @@ namespace NeutronBlaster
         public event PropertyChangedEventHandler ClipboadSetSoundChanged;
 
         private readonly SettingsManager<Settings> settingsManager;
+        private readonly MainWindowViewModel main;
         private readonly string userProfilePath;
 
-        public SettingsViewModel(SettingsManager<Settings> settingsManager)
+        public SettingsViewModel(MainWindowViewModel main, SettingsManager<Settings> settingsManager)
         {
+            this.main = main;
             this.settingsManager = settingsManager;
             userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
 
             ValidateJournalLocation();
             ValidateRouteLocation();
         }
+
+        public string Title => $"Neutron Blaster Settings V{main.Version}";
 
         private void ValidateJournalLocation()
         {

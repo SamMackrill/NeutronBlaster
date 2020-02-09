@@ -31,6 +31,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <!-- <RowDefinition Height="Auto"/> -->
                 <RowDefinition Height="2"/>
             </Grid.RowDefinitions>
 
@@ -98,6 +99,7 @@
             <Label Padding="0" Grid.Row="4" Grid.Column="1" Content="Target System:" MouseDoubleClick="TargetSystem_OnMouseDoubleClick"/>
             <Label Grid.Row="4" Grid.Column="2" Content="{Binding Path=TargetSystem}" MouseDoubleClick="TargetSystem_OnMouseDoubleClick"/>
 
+            <!-- <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Path=DebugLog, Mode=OneWay}"/> -->
 
         </Grid>
     </Border>
