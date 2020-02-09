@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-
 namespace NeutronBlaster
 {
     public abstract class BaseViewModel: INotifyPropertyChanged

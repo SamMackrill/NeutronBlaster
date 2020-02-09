@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Threading;
@@ -12,20 +14,46 @@ namespace NeutronBlaster
 {
     public class MainWindowViewModel : BaseViewModel
     {
-
-        private readonly Router router;
+        private Router router;
         private readonly SoundPlayer player;
-        private readonly string releasePath = "https://neutron-blaster.s3.amazonaws.com";
-        private SettingsViewModel settings;
+        private const string ReleasePath = "https://neutron-blaster.s3.amazonaws.com";
+        private readonly SettingsViewModel settings;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(SettingsManager<Settings> settingsManager)
         {
-            settings = new SettingsViewModel();
-            player = new SoundPlayer {SoundLocation = @"Resources\Hitting_Metal.wav"};
-            player.Load();
+            settings = new SettingsViewModel(settingsManager);
+            settings.ClipboadSetSoundChanged += SetClipboardSound;
+            settings.JournalLocationChanged += RefreshJournalLocation;
+            settings.RouteLocationChanged += RefreshRouteLocation;
+
+            player = new SoundPlayer { SoundLocation = settings.ClipboardSetSound };
             router = new Router(settings.RouteLocation);
         }
 
+        private void RefreshJournalLocation(object sender, PropertyChangedEventArgs e)
+        {
+            Watch();
+        }
+
+        private void RefreshRouteLocation(object sender, PropertyChangedEventArgs e)
+        {
+            router = new Router(settings.RouteLocation);
+            Watch();
+        }
+
+        private void SetClipboardSound(object sender, PropertyChangedEventArgs e)
+        {
+            if (player == null || !File.Exists(settings.ClipboardSetSound)) return;
+            player.SoundLocation = settings.ClipboardSetSound;
+            try
+            {
+                player.Play();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot play: {player.SoundLocation} because {exception.Message}");
+            }
+        }
 
         private string commander;
         public string Title => $"Neutron Blaster{(commander == null ? "" : $": {commander}")}";
@@ -42,7 +70,6 @@ namespace NeutronBlaster
                 OnPropertyChanged();
             }
         }
-
 
         private string lastLocationOnRoute;
         public string LastSystemOnRoute
@@ -75,29 +102,36 @@ namespace NeutronBlaster
 
         public Thread SetClipboard(string text)
         {
+            if (string.IsNullOrWhiteSpace(text)) return null;
+
             var thread = new Thread(() =>
             {
                 Clipboard.SetText(text);
-                player.Play();
+
+                if (!File.Exists(player.SoundLocation)) return;
+                try
+                {
+                    player.PlaySync();
+                }
+                catch (Exception)
+                {
+                    // swallow bad wav
+                }
             });
+
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             return thread;
         }
 
+        private JournalWatcher watcher;
+
         public void Begin()
         {
             try
             {
-                var watcher = new JournalWatcher(settings.JournalFileLocation, router);
-                watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
-                watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
-                watcher.CommanderChanged += (sender, c) =>
-                {
-                    commander = c;
-                    OnPropertyChanged(nameof(Title));
-                };
-                watcher.StartWatching();
+                player.LoadAsync();
+                Watch();
             }
             catch (Exception ex)
             {
@@ -105,15 +139,26 @@ namespace NeutronBlaster
             }
         }
 
+        private void Watch()
+        {
+            CurrentSystem = "";
+            LastSystemOnRoute = "";
+            TargetSystem = "";
+            watcher = new JournalWatcher(settings.JournalLocation, router);
+            watcher.CurrentSystemChanged += (sender, l) => CurrentSystem = l;
+            watcher.LastSystemOnRouteChanged += (sender, l) => LastSystemOnRoute = l;
+            watcher.CommanderChanged += (sender, c) =>
+            {
+                commander = c;
+                OnPropertyChanged(nameof(Title));
+            };
+            watcher.StartWatching();
+        }
+
         public RelayCommand ShowSettingsCommand => new RelayCommand( () =>
         {
-            var settingsView = new SettingsWindow
-            {
-                DataContext = settings
-            };
-
-            var result = settingsView.ShowDialog();
-            if (result != true) return;
+            var settingsView = new SettingsWindow { DataContext = settings };
+            settingsView.ShowDialog();
         });
 
         private string version;
@@ -151,6 +196,7 @@ namespace NeutronBlaster
                 OnPropertyChanged();
             }
         }
+
         public async Task CheckForUpdates(string[] args)
         {
 
@@ -168,7 +214,7 @@ namespace NeutronBlaster
                 UpdateInformation = "Checking...";
 
                 string latestVersion;
-                using (var updateManager = new UpdateManager(releasePath, App.applicationName))
+                using (var updateManager = new UpdateManager(ReleasePath, App.ApplicationName))
                 {
                     void OnDo(string caller, Action<Version> doAction, Version v = null)
                     {

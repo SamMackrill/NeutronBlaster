@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows;
 
-using NeutronBlaster.Models;
-
 namespace NeutronBlaster
 {
     /// <summary>
@@ -11,28 +9,23 @@ namespace NeutronBlaster
     /// </summary>
     public partial class App : Application
     {
-        public static string applicationName;
+        public static string ApplicationName;
+        public static Settings Settings;
+
         private MainWindowViewModel context;
         private Task update = Task.FromResult(true);
+        private SettingsManager<Settings> settingsManager;
 
         private async void Application_Start(object sender, StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
-            applicationName = typeof(App).Assembly.GetName().Name;
+            ApplicationName = typeof(App).Assembly.GetName().Name;
 
-            var userProfilePath = Environment.GetEnvironmentVariable("USERPROFILE");
-            if (string.IsNullOrWhiteSpace(Settings.Default.JournalFileLocation))
-            {
-                Settings.Default.JournalFileLocation = $@"{userProfilePath}\Saved Games\Frontier Developments\Elite Dangerous";
-            }
+            settingsManager = new SettingsManager<Settings>($"{ApplicationName}.json");
+            Settings = await settingsManager.Load();
 
-            if (string.IsNullOrWhiteSpace(Settings.Default.RouteLocation))
-            {
-                Settings.Default.RouteLocation = $@"{userProfilePath}\Downloads";
-            }
-
-            context = new MainWindowViewModel();
+            context = new MainWindowViewModel(settingsManager);
             var window = new MainWindow
             {
                 DataContext = context
@@ -60,7 +53,7 @@ namespace NeutronBlaster
 
         private async void Application_Exit(object sender, ExitEventArgs e)
         {
-            Settings.Default.Save();
+            settingsManager.Save();
             await update.ContinueWith(ex => { });
             context?.Dispose();
         }
