@@ -8,8 +8,8 @@
     <Company />
     <RepositoryUrl>https://github.com/SamMackrill/NeutronBlaster</RepositoryUrl>
     <Description>Blast through the Neutron Super Highway</Description>
-    <AssemblyVersion>1.0.5</AssemblyVersion>
-    <FileVersion>1.0.5</FileVersion>
+    <AssemblyVersion>1.0.6</AssemblyVersion>
+    <FileVersion>1.0.6</FileVersion>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
