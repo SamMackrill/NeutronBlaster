@@ -191,7 +191,11 @@ namespace NeutronBlaster
             {
                 Version = updateManager.CurrentlyInstalledVersion();
                 var releaseEntry = await updateManager.UpdateApp();
-                if (releaseEntry==null) Update = " Latest";
+                if (releaseEntry == null)
+                {
+                    Update = " Latest";
+                    return;
+                }
                 Update = $" Restart for {releaseEntry.Version.ToString()}";
             }
         }
